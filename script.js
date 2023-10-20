@@ -6,7 +6,7 @@ function crearLista(){
     let form = document.createElement('div')
     // edit.classList.add('edit', `e${item.id}`)
     let content = `
-    <form action="sql/agregar_lista.php" method="post">
+    <form action="sql/listaABM.php" method="post">
     <label for="nombre">Titulo</label>
     <input type="text" name="titulo" required>
     <input type='hidden' name='accion' value='crear_lista'>

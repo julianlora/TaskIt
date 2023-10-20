@@ -7,13 +7,11 @@
 </head>
 <?php
 
-if(isset($_SESSION['nombre']) and isset($_SESSION['apellido']) ){
+if(isset($_SESSION['usuario'])){
 	
-echo "Hola! ";
-echo $_SESSION['nombre']." ";
-echo $_SESSION['apellido'];
-echo "<p><img src='imagenes/cuadro.jpg' /></p>";
-echo "<a href='salir.php'>Cerrar sesion</a>";
+	echo "Hola! ";
+	echo $_SESSION['usuario'];
+	echo "<a href='salir.php'>Cerrar sesion</a>";
 
 	
 }else{

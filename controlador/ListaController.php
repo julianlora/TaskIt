@@ -7,7 +7,16 @@ class ListaController {
 
     public function __construct($conexion) {
         $this->conexion = $conexion;
-        $resultado = mysqli_query($this->conexion, "SELECT * from listas ORDER BY id DESC");
+        $this->cargarListasDelUsuario();
+    }
+
+    public function cargarListasDelUsuario(){
+        $id = $_SESSION['id'];
+        $resultado = mysqli_query($this->conexion, "
+        SELECT * from listas
+        WHERE id_usuario = '$id'
+        ORDER BY id DESC
+        ");
         while($fila = mysqli_fetch_array($resultado)){
             $this->listas[] = $fila;
         }
@@ -25,8 +34,8 @@ class ListaController {
                         <meter class='progress'></meter>
                         <span class='listmenu'>
                         <div class='dropdown'>
-                            <button class='opcionesbtn lista$id'>Opciones</button>
-                            <div id='opciones-lista$id' class='dropdown-content'>
+                            <button class='opcionesbtn lista'>Opciones</button>
+                            <div id='opciones-lista' class='dropdown-content'>
                                 <button class='paper-btn show'>Esconder tareas terminadas</button>
                                 <button class='paper-btn show'>Esconder barra de progreso</button>
                                 <button class='paper-btn show'>Modificar fecha de finalización</button>
@@ -39,7 +48,7 @@ class ListaController {
             $item_controlador->cargarItemsDeLista($id);
             echo "</ul>
                     <div class='bottom-menu'>
-                        <form action='sql/agregar_item.php' method='post'>
+                        <form action='sql/itemABM.php' method='post'>
                             <input type='hidden' name='id_lista' value='$id'>
                             <input type='text' name='texto' required>
                             <button type='submit'>Agregar item</button>
@@ -47,7 +56,7 @@ class ListaController {
                         <br><button class='retractlistbtn'>^</button>
                     </div>
                 </article>
-                ";
+            ";
         }
         
         

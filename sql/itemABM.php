@@ -1,4 +1,5 @@
 <?php
+session_start();
 include("../connect.php");
 // Verificar si se ha enviado el formulario
 
@@ -6,7 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     // Recuperar los datos del formulario
     $texto = $_POST["texto"];
-    $id_lista = $_POST["id_lista"];
+    $id_lista = $_SESSION["id_lista"];
 
     // Crear la consulta SQL
     $sql = "INSERT INTO items (texto, id_lista) VALUES ('$texto', '$id_lista')";

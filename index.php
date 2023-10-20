@@ -1,3 +1,4 @@
+<?php session_start();?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +14,10 @@
         <nav>
             <!-- Contenido de la barra de navegación, como logotipo, menús, etc. -->
             BARRA DE NAVEGACION
-            <a href="form_login.php"><button>Login</button></a>
+            <?php
+            $usuario = $_SESSION['usuario'];
+            echo "<a href='perfil/panel.php'>$usuario</a>"
+            ?>
         </nav>
     </header>
 
