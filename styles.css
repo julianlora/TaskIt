@@ -1,0 +1,115 @@
+/* Estilos generales para el cuerpo de la página */
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Estilos para el contenedor de la barra lateral y la ventana principal */
+.container {
+    display: flex; /* Uso de flexbox */
+    height: 100%;
+}
+
+/* Estilos para la barra lateral izquierda */
+aside {
+    background-color: #026aa7;
+    color: #fff;
+    width: 250px;
+    padding: 10px;
+}
+
+/* Estilos para la ventana principal */
+main {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto; /* Agrega una barra de desplazamiento vertical si es necesario */
+}
+
+.lista{
+    border: solid green;
+    min-height: 25%;
+}
+
+/* DROPDOWNN */
+
+.opcionesbtn {
+    background-color: #3498DB;
+    color: white;
+    padding: 5px;
+    font-size: 10px;
+    border: none;
+    cursor: pointer;
+  }
+
+.opcionesbtn:hover, .opcionesbtn:focus {
+    background-color: #2980B9;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color:#202124;
+    border: solid 1px #5f6368;
+    min-width: 160px;
+    overflow: auto;
+    /* border-width: 0; */
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 60%), 0 2px 6px 2px rgb(0 0 0 / 30%);
+    border-radius: 4px;
+    z-index: 1;
+    right: 0px;
+}
+
+.dropdown-content button {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    width: 160px;
+}
+
+.show {display: block;}
+
+.paper-btn{
+    background:none;
+    border-style:none;
+    margin:0;
+    cursor: pointer;
+    user-select: none;
+}
+
+.paper-btn:not(:last-of-type){
+    border-bottom: 1px solid #5f6368;
+}
+
+.paper-btn:hover {background-color: #5f6368;}
+
+/* Estilos para la barra de navegación superior */
+header {
+    background-color: #0079bf;
+    color: #fff;
+    padding: 10px;
+}
+
+/* Estilos para el pie de página (opcional) */
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+}
+
+.barra{
+    border: solid red;
+}
+.barralateral{
+    border: solid red;
+}
+.ventanaprincipal{
+    border: solid red;
+}
