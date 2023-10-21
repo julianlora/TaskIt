@@ -10,15 +10,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     switch($accion){
         case "crear_lista":
             $titulo = $_POST["titulo"];
-            $id = $_SESSION['id'];
+            $id_usuario = $_SESSION['id'];
+            $etiqueta = $_POST["etiqueta"];
             // Crear la consulta SQL
-            $sql = "INSERT INTO listas (titulo, id_usuario) VALUES ('$titulo', '$id')";
+            $sql = "INSERT INTO listas (titulo, id_usuario) VALUES ('$titulo', '$id_usuario')";
 
             // Ejecutar la consulta
             if (mysqli_query($conexion, $sql)) {
                 echo "Registro insertado con éxito.";
             } else {
                 echo "Error al insertar el registro: " . mysqli_error($conexion);
+            }
+
+            if($etiqueta != 'ninguna'){
+                $sql = "
+                UPDATE listas
+                SET etiqueta = '$etiqueta'
+                WHERE titulo='$titulo' AND id_usuario = '$id_usuario';";
+                if (mysqli_query($conexion, $sql)) {
+                    echo "Etiqueta actualizada con éxito.";
+                } else {
+                    echo "Error al actualizar la etiqueta: " . mysqli_error($conexion);
+                }
             }
 
             // Cerrar la conexión a la base de datos

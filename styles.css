@@ -20,6 +20,13 @@ aside {
     padding: 10px;
 }
 
+.etiqueta {
+    padding: 0;
+    border: none;
+    background-color: #026aa7;
+    color: white;
+}
+
 /* Estilos para la ventana principal */
 main {
     flex: 1;

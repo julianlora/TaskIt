@@ -1,4 +1,11 @@
-<?php session_start();?>
+<?php
+    session_start();
+    require("connect.php"); 
+    include("controlador/ListaController.php");
+    $controladorlista = new ListaController($conexion);
+    include("controlador/EtiquetaController.php");
+    $controladoretiqueta = new EtiquetaController($conexion);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,8 +14,8 @@
     <title>TaskIt</title>
     <link rel="stylesheet" href="styles.css"> <!-- Enlaza a tu archivo de estilos CSS -->
 </head>
-<?php require("connect.php"); ?>
 <body>
+    <h1 hidden="true">TaskIt</h1>
     <!-- Barra de Navegación Superior -->
     <header class="barra">
         <nav>
@@ -26,21 +33,34 @@
         <aside class="barralateral">
             <!-- Contenido de la barra lateral, como menús, enlaces, etc. -->
             BARRA LATERAL
-            <h2>Todo</h2>
+            <div style="display:flex;">
+                <h2>Mis listas</h2>
+                <?php
+                if (!isset($_POST['accion']) || $_POST['accion'] != 'nueva_lista'){
+                    $controladorlista->insertarBotonNuevaLista();
+                }
+                ?>
+            </div>
+            <?php
+                if (isset($_POST['accion']) && $_POST['accion'] == 'nueva_lista'){
+                    $controladorlista->insertarFormularioCrearLista();
+                }
+                $controladoretiqueta->mostrarEtiquetasEnPantalla();
+                if (isset($_POST['accion']) && $_POST['accion'] == 'crear_etiqueta'){
+                    $controladoretiqueta->insertarFormularioCrearEtiqueta();
+                } else {
+                    $controladoretiqueta->insertarBotonCrearEtiqueta();
+                }
+                
+            ?>
         </aside>
 
         <!-- Ventana Principal -->
         <main class="ventanaprincipal">
             <!-- Contenido principal de la página, como tableros, tarjetas, listas, etc. -->
-            
-            <button class="nuevalista" onclick=crearLista()>Nueva lista</button>
 
             <?php
-                include("controlador/ListaController.php");
-                $controlador = new ListaController($conexion);
-                $controlador->mostrarListasEnPantalla();
-                
-                
+                $controladorlista->mostrarListasEnPantalla();
             ?>
         </main>
     </div>
