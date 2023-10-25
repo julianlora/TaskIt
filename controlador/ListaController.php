@@ -20,6 +20,7 @@ class ListaController {
         while($fila = mysqli_fetch_array($resultado)){
             $this->listas[] = $fila;
         }
+        // mysqli_close($this->conexion);
     }
 
     public function insertarBotonNuevaLista(){
@@ -33,7 +34,7 @@ class ListaController {
 
     public function insertarFormularioCrearLista(){
         echo"
-        <form action='sql/listaABM.php' method='post'>
+        <form class='animation' action='sql/listaABM.php' method='post'>
         <label for='titulo'>Titulo</label>
         <input type='text' name='titulo' required>
         <label for='etiqueta'>Etiqueta</label>
@@ -81,10 +82,11 @@ class ListaController {
                             </span>
                         </h1>
                         <ul class='mainlist'>";
-                $item_controlador->cargarItemsDeLista($id);
+                $item_controlador->cargarItemsDeLista($id, 0);
                 echo "</ul>
                         <div class='bottom-menu'>
                             <form action='sql/itemABM.php' method='post'>
+                                <input type='hidden' name='accion' value='agregar_item'>
                                 <input type='hidden' name='id_lista' value='$id'>
                                 <input type='text' name='texto' required>
                                 <button type='submit'>Agregar item</button>

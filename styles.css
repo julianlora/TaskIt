@@ -1,3 +1,21 @@
+.animation {
+    animation-duration: 0.5s;
+    animation-name: slidein;
+  }
+  
+  @keyframes slidein {
+    from {
+      margin-top: 100%;
+      width: 300%;
+    }
+  
+    to {
+      margin-top: 0%;
+      width: 100%;
+    }
+  }
+
+
 /* Estilos generales para el cuerpo de la página */
 body {
     display: flex;
@@ -96,6 +114,25 @@ main {
 }
 
 .paper-btn:hover {background-color: #5f6368;}
+
+.cabecera_item{
+    display: flex;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.checkbox {
+    padding: 0;
+    border: none;
+    background-color: white;
+    color: white;
+}
+
+.checkbox img{
+    max-height: 20px;
+}
 
 /* Estilos para la barra de navegación superior */
 header {
