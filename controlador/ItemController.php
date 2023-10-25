@@ -12,7 +12,21 @@ class ItemController {
 
         $resultado = mysqli_query($this->conexion, "
         SELECT * from items
-        WHERE id_lista = '$id_lista' and nivel = $nivel 
+        WHERE id_lista = '$id_lista' and nivel = 0
+        ");
+        while($item = mysqli_fetch_array($resultado)){
+            $this->items[] = $item;
+            $this->mostrarItemEnPantalla($item);
+        }
+        // mysqli_close($this->conexion);
+        
+    }
+
+    public function cargarSubItemsDeLista($id_item_padre, $nivel, $id_lista){
+
+        $resultado = mysqli_query($this->conexion, "
+        SELECT * from items
+        WHERE id_lista = '$id_lista' and nivel = $nivel and id_item_padre = '$id_item_padre' 
         ");
         while($item = mysqli_fetch_array($resultado)){
             $this->items[] = $item;
@@ -86,7 +100,7 @@ class ItemController {
                     <ul>
                     ";
                     $proximo_nivel = $nivel + 1;
-                    $this->cargarItemsDeLista($id_item, $proximo_nivel);
+                    $this->cargarSubItemsDeLista($id_item, $proximo_nivel, $id_lista);
                     echo "
                     </ul>
             ";

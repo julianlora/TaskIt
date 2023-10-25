@@ -10,8 +10,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     switch($accion){
         case "crear_lista":
             $titulo = $_POST["titulo"];
+
             $id_usuario = $_SESSION['id'];
             $etiqueta = $_POST["etiqueta"];
+            $fecha = $_POST['fecha'];
+
             // Crear la consulta SQL
             $sql = "INSERT INTO listas (titulo, id_usuario) VALUES ('$titulo', '$id_usuario')";
 
@@ -26,6 +29,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $sql = "
                 UPDATE listas
                 SET etiqueta = '$etiqueta'
+                WHERE titulo='$titulo' AND id_usuario = '$id_usuario';";
+                if (mysqli_query($conexion, $sql)) {
+                    echo "Etiqueta actualizada con éxito.";
+                } else {
+                    echo "Error al actualizar la etiqueta: " . mysqli_error($conexion);
+                }
+            }
+
+            if ($fecha != ''){
+                $sql = "
+                UPDATE listas
+                SET fecha_finalizacion = '$fecha'
                 WHERE titulo='$titulo' AND id_usuario = '$id_usuario';";
                 if (mysqli_query($conexion, $sql)) {
                     echo "Etiqueta actualizada con éxito.";

@@ -24,6 +24,10 @@ body {
     margin: 0;
 }
 
+nav{
+    display: flex;
+}
+
 /* Estilos para el contenedor de la barra lateral y la ventana principal */
 .container {
     display: flex; /* Uso de flexbox */
