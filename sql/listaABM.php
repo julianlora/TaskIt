@@ -53,8 +53,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             mysqli_close($conexion);
             header("Location: ../index.php");
             break;
+        
+        case "eliminar_lista":
+            $id_lista = $_POST['id_lista'];
+            // Crear la consulta SQL
+            $sql = "DELETE FROM listas WHERE id = '$id_lista';";
+            if (mysqli_query($conexion, $sql)) {
+                echo "Registro eliminado con éxito.";
+            } else {
+                echo "Error al eliminar el registro: " . mysqli_error($conexion);
+            }
+            mysqli_close($conexion);
+            header("Location: ../index.php");
+            break;
+        
+        default:
+            echo "No existe accion con ese nombre";
+            break;
     }
-    
 } else {
     echo "El formulario no se ha enviado.";
 }

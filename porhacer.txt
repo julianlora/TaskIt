@@ -1,3 +1,4 @@
 - Si estoy en etiqueta "todas" mostrar la etiqueta de cada lista en la esquina
 - Pedir confirmacion por checkeos y descheckeos con dependencias
 - No permitir crear una lista con un titulo ya usado?
+- Agregar los cambios de ventana

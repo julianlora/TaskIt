@@ -87,19 +87,20 @@ class ListaController {
                         <meter class='progress'></meter>
                         <span class='listmenu'>
                         <div class='dropdown'>
-                            <button class='opcionesbtn lista'>Opciones</button>
-                            <div id='opciones-lista' class='dropdown-content'>
+                            <button class='opcionesbtn $id'>Opciones</button>
+                            <div id='opciones-$id' class='dropdown-content'>
                                 <button class='paper-btn show'>Esconder tareas terminadas</button>
                                 <button class='paper-btn show'>Esconder barra de progreso</button>
                                 <button class='paper-btn show'>Definir etiqueta</button>
-                                <button class='paper-btn show'>Modificar fecha de finalización</button>
-                                <button class='paper-btn show'>Eliminar</button>
+                                <button class='paper-btn show'>Modificar fecha de finalización</button>";
+                                $this->insertarOpcionEliminar($lista);
+                echo "
                             </div>
                         </div>
                         </span>
                     </h1>
                     <ul class='mainlist'>";
-                $item_controlador->cargarItemsDeLista($id, 0);
+                    $item_controlador->cargarItemsDeLista($id, 0);
                 echo "
                     </ul>
                     <div class='bottom-menu'>
@@ -113,10 +114,32 @@ class ListaController {
                     </div>
                 </article>";
             }
-            
         }
-        
-        
+    }
+
+    public function insertarOpcionEliminar($lista){
+        $id = $lista['id'];
+        $titulo = $lista['titulo'];
+
+        // Botón para eliminar
+        echo"
+        <button id='mostrarVentana-$id' class='paper-btn opcionbtn eliminar $id show'>Eliminar</button>";
+
+        // Ventana de confirmacion escondida
+        echo"
+        <div id='ventana_confirmacion-$id' class='ventana_confirmacion'>
+            <div class='confirmacion-contenido'>
+                <h2>¿Desea eliminar la lista $titulo?</h2>
+                <div class='confirmacion-botones'>
+                    <form action='sql/listaABM.php' method='post'>
+                        <input type='hidden' name='accion' value='eliminar_lista'>
+                        <input type='hidden' name='id_lista' value='$id'>
+                        <button class='confirmar_eliminar' type='submit'>Eliminar</button>
+                    </form>
+                    <button class='cancelar_eliminar $id'>Cancelar</button>
+                </div>
+            </div>
+        </div>
+        ";
     }
 }
-?>

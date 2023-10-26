@@ -15,28 +15,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TaskIt</title>
     <link rel="stylesheet" href="styles.css"> <!-- Enlaza a tu archivo de estilos CSS -->
-    <style>
-        /* Estilos CSS para el calendario estilo Trello */
-        .ventana-principal {
-            display: flex;
-            justify-content: center;
-        }
-
-        .calendario-trello {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .dia {
-            width: 150px;
-            height: 150px;
-            margin: 10px;
-            background-color: #0079bf;
-            color: #fff;
-            padding: 10px;
-            border-radius: 5px;
-        }
-    </style>
 </head>
 <body>
     <h1 hidden="true">TaskIt</h1>
@@ -62,8 +40,15 @@
     <div class="container">
         <!-- Barra Lateral Izquierda -->
         <aside class="barralateral">
-            <!-- Contenido de la barra lateral, como menús, enlaces, etc. -->
             BARRA LATERAL
+            <!-- <button id="mostrarVentana">Enviar formulario</button>
+            <div id="ventana_confirmacion" class="ventana_confirmacion">
+                <div class="confirmacion-contenido">
+                    <h2>¿Desea confirmar la operación?</h2>
+                    <button id="confirmar">Confirmar</button>
+                    <button id="cancelar">Cancelar</button>
+                </div>
+            </div> -->
             <div style="display:flex;">
                 <a href="to_listas.php"><h2>Mis listas</h2></a>
                 <?php

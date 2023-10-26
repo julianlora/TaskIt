@@ -22,6 +22,7 @@ body {
     flex-direction: column;
     height: 100vh;
     margin: 0;
+    font-family: Roboto,Arial,sans-serif;
 }
 
 nav{
@@ -56,12 +57,13 @@ main {
     overflow-y: auto; /* Agrega una barra de desplazamiento vertical si es necesario */
 }
 
+/* LISTAS  */
+
 .lista{
     border: solid green;
     min-height: 25%;
+    max-width: 25%;
 }
-
-/* DROPDOWNN */
 
 .opcionesbtn {
     background-color: #3498DB;
@@ -119,15 +121,73 @@ main {
 
 .paper-btn:hover {background-color: #5f6368;}
 
-.cabecera_item{
+.opcionbtn{
+    padding: 0;
+    border: none;
+}
+
+.eliminar{
+    background-color: red;
+}
+
+.ventana_confirmacion {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.confirmacion-contenido {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    color: black;
+}
+
+/* Para ocultar el fondo cuando se muestra la ventana de confimacion */
+.ventana_confirmacion-activo {
     display: flex;
 }
 
-ul {
+.ventana_confirmacion-activo button{
+    color: black;
+}
+
+.confirmacion-botones{
+    display: flex;
+    justify-content: center;
+}
+
+.cancelar_eliminar{
+    display:flex;
+}
+
+ul{
     list-style-type: none;
 }
 
+/* ITEM */
+.cabecera_item{
+    /* display: flex; */
+    max-width: 95%;
+    position: relative;
+}
+
+.item-texto{
+    margin: 0; /* Elimina el margen predeterminado del párrafo */
+    white-space: pre-line; /* Permite saltos de línea en espacios en blanco */
+    word-wrap: break-word; 
+}
+
 .checkbox {
+    position: absolute;
+    left: -1.5vw;
     padding: 0;
     border: none;
     background-color: white;
@@ -136,6 +196,53 @@ ul {
 
 .checkbox img{
     max-height: 20px;
+}
+
+.nuevo-subitem-btn{
+    position:absolute;
+    left:-10%;
+}
+
+/* CALENDARIO */
+
+.ventana-principal {
+    display: flex;
+    justify-content: center;
+}
+
+.calendario-trello {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 1900px; /* Ajusta el ancho máximo del calendario según sea necesario */
+}
+
+.encabezado-dia {
+    font-weight: bold;
+    text-align: center;
+    flex: 0 0 calc(13% - 20px); /* Calcula el ancho para un máximo de 7 tarjetas por fila */
+    margin: 10px;
+    background-color: #0079bf;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.dia {
+    flex: 0 0 calc(13% - 20px); /* Calcula el ancho para un máximo de 7 tarjetas por fila */
+    height: 150px;
+    margin: 10px;
+    background-color: #0079bf;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.dia.hoy{
+    background-color: aqua;
+}
+
+.dia.extra{
+    opacity: 0.5;
 }
 
 /* Estilos para la barra de navegación superior */

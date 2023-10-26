@@ -9,7 +9,15 @@ window.addEventListener('click', function(event) {
             var clase = clases[i];
             if (clase == 'opcionesbtn'){
                 document.getElementById(`opciones-${clases[1]}`).classList.toggle("show");
+            } else if (clase == 'eliminar'){
+                let id_lista = clases[3]
+                document.getElementById(`ventana_confirmacion-${id_lista}`).classList.add("ventana_confirmacion-activo")
+            } else if (clase == 'cancelar_eliminar'){
+                let id_lista = clases[1]
+                document.getElementById(`ventana_confirmacion-${id_lista}`).classList.remove("ventana_confirmacion-activo")
             }
         }
+    } else {
+        window.location.href = "index.php"; // usar para cerrar cosas abiertas
     }
 });

@@ -113,6 +113,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header("Location: ../index.php");
             break;
 
+        default:
+            echo "No existe accion con ese nombre";
+            break;
+
     }
     
 } else {

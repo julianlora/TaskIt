@@ -53,27 +53,24 @@ class ItemController {
         // CHECKBOX
         if (!$checked){
             // Checkeada
-            echo "
-                        <form action='sql/itemABM.php' method='post'>
-                            <input type='hidden' name='accion' value='checkear'>
-                            <input type='hidden' name='id_item' value='$id_item'>
-                            <input type='hidden' name='nivel' value='$nivel'>
-                            <input type='hidden' name='id_lista' value='$id_lista'>
-                            <button class='checkbox'><img class='unchecked' src='../TaskIt/unchecked.png'></button>
-                        </form>
-                        $texto";
+            $accion = 'checkear';
+            $clase = 'unchecked';
+            $img_path = '../TaskIt/unchecked.png';
         } else {
             // No checkeada
-            echo "
+            $accion = 'descheckear';
+            $clase = 'checked';
+            $img_path = '../TaskIt/checked.png';
+        }
+        echo "
                         <form action='sql/itemABM.php' method='post'>
-                            <input type='hidden' name='accion' value='descheckear'>
+                            <input type='hidden' name='accion' value='$accion'>
                             <input type='hidden' name='id_item' value='$id_item'>
                             <input type='hidden' name='nivel' value='$nivel'>
                             <input type='hidden' name='id_lista' value='$id_lista'>
-                            <button class='checkbox'><img class='checked' src='../TaskIt/checked.png'></button>
+                            <button class='checkbox'><img class='$clase' src='$img_path'></button>
                         </form>
-                        $texto";
-        }
+                        <p class='item-texto'>$texto<p>";
                         
         
         if (isset($_POST['accion']) && $_POST['accion'] == 'nuevo_subitem' && $_POST['id_item'] == $id_item){
@@ -85,7 +82,7 @@ class ItemController {
                             <input type='hidden' name='accion' value='nuevo_subitem'>
                             <input type='hidden' name='id_item' value='$id_item'>
                             <input type='hidden' name='id_lista' value='$id_lista'>
-                            <button type='submit'>+</button>
+                            <button class='nuevo-subitem-btn' type='submit'>+</button>
                         </form>
             ";
         }
