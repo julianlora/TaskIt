@@ -25,6 +25,7 @@ class CalendarioController {
         $numeroDiaActual = date('2', strtotime($hoy)); // 0 - 6 (domingo a sabado)
 
         echo"
+        <main class='ventanaprincipal calendario'><br>
         <h1>$nombreMes, $añoActual</h1><br>
         <div class='calendario-trello'>
             <div class='encabezado-dia'>Domingo</div>
@@ -61,7 +62,8 @@ class CalendarioController {
             </div>";
         }
         echo'
-        </div>';
+        </div>
+        </main>';
     }
 
     public function buscarEvento($fecha_tarjeta){

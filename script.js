@@ -21,3 +21,31 @@ window.addEventListener('click', function(event) {
         window.location.href = "index.php"; // usar para cerrar cosas abiertas
     }
 });
+
+
+// MOVER LISTA
+const listas = document.querySelectorAll('.lista'); // Todos los containers donde se pueden dejar
+listas.forEach(lista => {
+    lista.addEventListener('dragstart', () => {
+        lista.classList.add('dragging',`${lista.id}`)
+    })
+
+    lista.addEventListener('dragend', () => {
+        lista.classList.remove('dragging',`${lista.id}`)
+    })
+
+    lista.addEventListener('dragover', (e) => {
+        e.preventDefault()
+        const draggedLista = document.querySelector('.dragging')
+        const rect = lista.getBoundingClientRect();
+        const offsetY = e.clientY - rect.top;
+        const halfHeight = rect.height / 2;
+        if (offsetY < halfHeight) {
+            // Cursor en la mitad superior del elemento objetivo
+            lista.insertAdjacentElement('beforebegin', draggedLista)
+        } else {
+            // Cursor en la mitad inferior del elemento objetivo
+            lista.insertAdjacentElement('afterend', draggedLista)
+        }
+    })
+})

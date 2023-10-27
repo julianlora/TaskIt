@@ -23,32 +23,23 @@
         <nav>
             <!-- Contenido de la barra de navegación, como logotipo, menús, etc. -->
             BARRA DE NAVEGACION
-            <?php
-            $usuario = $_SESSION['usuario'];
-            echo "<a href='perfil/panel.php'>$usuario</a>"
-            ?>
-            <form method="post">
+            <form class='buscador' method="post">
                 <label>Buscar
                 <input type='hidden' name='accion' value='buscar'>
                 <input type="search" name="busqueda" placeholder="Buscar..." />
                 <input type="submit" value="Enviar">
                 </label>
             </form>
+            <?php
+            $usuario = $_SESSION['usuario'];
+            echo "<a class='profile' href='perfil/panel.php'><img class='profile-icon' src='imagenes/profile-circle.png'></a>"
+            ?>
         </nav>
     </header>
 
     <div class="container">
         <!-- Barra Lateral Izquierda -->
         <aside class="barralateral">
-            BARRA LATERAL
-            <!-- <button id="mostrarVentana">Enviar formulario</button>
-            <div id="ventana_confirmacion" class="ventana_confirmacion">
-                <div class="confirmacion-contenido">
-                    <h2>¿Desea confirmar la operación?</h2>
-                    <button id="confirmar">Confirmar</button>
-                    <button id="cancelar">Cancelar</button>
-                </div>
-            </div> -->
             <div style="display:flex;">
                 <a href="to_listas.php"><h2>Mis listas</h2></a>
                 <?php
@@ -72,19 +63,19 @@
         </aside>
 
         <!-- Ventana Principal -->
-        <main class="ventanaprincipal">
+        <!-- <main class="ventanaprincipal"> -->
             <!-- Contenido principal de la página, como tableros, tarjetas, listas, etc. -->
 
-            <?php
-                if ($_SESSION['ventana'] == 'listas'){
-                    $controladorlista->mostrarListasEnPantalla();
-                } else {
-                    $controladorcalendario->mostrarCalendario();
-                }
-                
-            ?>
+        <?php
+            if ($_SESSION['ventana'] == 'listas'){
+                $controladorlista->mostrarListasEnPantalla($_SESSION['etiqueta']);
+            } else {
+                $controladorcalendario->mostrarCalendario();
+            }
             
-        </main>
+        ?>
+            
+        <!-- </main> -->
     </div>
 
     <!-- Footer (Opcional) -->

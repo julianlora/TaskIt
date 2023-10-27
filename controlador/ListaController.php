@@ -70,35 +70,49 @@ class ListaController {
         </form>";
     }
 
-    public function mostrarListasEnPantalla(){
+    public function mostrarListasEnPantalla($etiqueta){
         $item_controlador = new ItemController($this->conexion);
         if (isset($_POST['accion']) && $_POST['accion'] == 'buscar'){ // Si se realizó una búsqueda
             $busqueda = $_POST['busqueda'];
             echo "Resultados de búsqueda por '$busqueda':";
         }
+        echo "<main>";
+        if($etiqueta != 'todas'){
+            echo "<h1>$etiqueta</h1>";
+        }
+        echo "<div class='ventanaprincipal listas'>";
         foreach($this->listas as $lista){
-            if (!isset($_SESSION['etiqueta']) || $_SESSION['etiqueta'] == $lista['etiqueta'] || $_SESSION['etiqueta'] == 'todas'){ // Filtrar por etiqueta
+            if ($etiqueta == $lista['etiqueta'] || $etiqueta == 'todas'){ // Filtrar por etiqueta
                 $titulo = $lista['titulo'];
                 $id = $lista['id'];
                 echo "
-                <article class='lista'>
-                    <h1 class='titulo'>
-                        $titulo
-                        <meter class='progress'></meter>
-                        <span class='listmenu'>
+                <article id='$id' class='lista draggable' draggable='true'>";
+                // Si tiene etiqueta agregar rotulo
+                if ($etiqueta == 'todas' && $lista['etiqueta'] != ''){
+                    $this->insertarRotulo($lista['etiqueta']);
+                }
+                echo"
+                    <div class='drag $id'>HHH</div>
+                    <div class='listmenu'>
                         <div class='dropdown'>
-                            <button class='opcionesbtn $id'>Opciones</button>
+                            <img class='opcionesbtn $id' src='imagenes/three-dots.png'>
                             <div id='opciones-$id' class='dropdown-content'>
                                 <button class='paper-btn show'>Esconder tareas terminadas</button>
                                 <button class='paper-btn show'>Esconder barra de progreso</button>
                                 <button class='paper-btn show'>Definir etiqueta</button>
                                 <button class='paper-btn show'>Modificar fecha de finalización</button>";
                                 $this->insertarOpcionEliminar($lista);
-                echo "
+                echo"
                             </div>
                         </div>
-                        </span>
-                    </h1>
+                    </div>
+                    <div class='cabecera-lista'>
+                        <h1 class='titulo'>
+                            $titulo";
+                            $this->insertarBarraDeProgreso($id);
+                echo"
+                        </h1>
+                    </div>
                     <ul class='mainlist'>";
                     $item_controlador->cargarItemsDeLista($id, 0);
                 echo "
@@ -107,14 +121,28 @@ class ListaController {
                         <form action='sql/itemABM.php' method='post'>
                             <input type='hidden' name='accion' value='agregar_item'>
                             <input type='hidden' name='id_lista' value='$id'>
-                            <input type='text' name='texto' required>
-                            <button type='submit'>Agregar item</button>
-                        </form>
-                        <br><button class='retractlistbtn'>^</button>
+                            <input class='input-lista' type='text' name='texto' required>
+                            <button type='submit'>Agregar tarea</button>
+                        </form><br>
+                        <div class='retract-btn'>
+                            <button class='retractlistbtn'>^</button>
+                        </div>
                     </div>
                 </article>";
             }
         }
+        echo "
+            </div>
+        </main>";
+    }
+
+    public function insertarRotulo($etiqueta){
+        // $etiqueta = strtoupper($etiqueta);
+        echo"<div class='rotulo'><form action='sql/etiquetaABM.php' method='post'>
+        <input type='hidden' name='accion' value='filtrar_etiqueta'>
+        <input type='hidden' name='etiqueta' value='$etiqueta'>
+        <button class='etiqueta' type='submit'>$etiqueta</button>
+        </form></div>";
     }
 
     public function insertarOpcionEliminar($lista){
@@ -141,5 +169,15 @@ class ListaController {
             </div>
         </div>
         ";
+    }
+
+    public function insertarBarraDeProgreso($id){
+        // Consultar cantidad de items nivel 0 en la lista
+        $resultado = mysqli_query($this->conexion, " SELECT * from items WHERE id_lista = '$id' and nivel = 0");
+        $cantMax = mysqli_num_rows($resultado);
+        // Consultar cantidad de items checkeados nivel 0 en la lista
+        $resultado = mysqli_query($this->conexion, " SELECT * from items WHERE id_lista = '$id' and nivel = 0 and checked = true");
+        $cantChecked = mysqli_num_rows($resultado);
+        echo "<meter value='$cantChecked' min='0' max='$cantMax' class='progress'></meter>";
     }
 }

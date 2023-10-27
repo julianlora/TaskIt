@@ -55,12 +55,12 @@ class ItemController {
             // Checkeada
             $accion = 'checkear';
             $clase = 'unchecked';
-            $img_path = '../TaskIt/unchecked.png';
+            $img_path = '../TaskIt/imagenes/unchecked.png';
         } else {
             // No checkeada
             $accion = 'descheckear';
             $clase = 'checked';
-            $img_path = '../TaskIt/checked.png';
+            $img_path = '../TaskIt/imagenes/checked.png';
         }
         echo "
                         <form action='sql/itemABM.php' method='post'>

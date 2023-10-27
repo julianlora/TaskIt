@@ -17,16 +17,52 @@
 
 
 /* Estilos generales para el cuerpo de la página */
+/* 
+*{
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+} */
 body {
     display: flex;
     flex-direction: column;
     height: 100vh;
     margin: 0;
     font-family: Roboto,Arial,sans-serif;
+    background-color: #202124;
+    color:#e8eaed;
+}
+
+button{
+    cursor: pointer;
 }
 
 nav{
     display: flex;
+    justify-content: space-between;
+}
+
+.buscador{
+    align-self: center;
+}
+
+.buscador input[type="search"]{
+    background-color: #0079bf;
+    border: none; 
+    color: #fff;
+    border: solid hsl(180, 1%, 100%);
+    border-width:1px 1px 1px 1px;
+    border-radius: 2%;
+}
+
+.profile{
+    display: flex;
+    padding-left: 0.5vw;
+}
+
+.profile-icon{
+    max-width: 2em;
+    align-self: center;
 }
 
 /* Estilos para el contenedor de la barra lateral y la ventana principal */
@@ -50,28 +86,81 @@ aside {
     color: white;
 }
 
-/* Estilos para la ventana principal */
-main {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto; /* Agrega una barra de desplazamiento vertical si es necesario */
+main{
+    flex:1;
+    padding: 1%;
+    overflow-y: auto;
 }
 
 /* LISTAS  */
 
+/* Estilos para la ventana principal */
+.ventanaprincipal.listas {
+    /* display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: flex-start;
+    max-width: 100%; */
+    columns: 4;
+    column-gap: 1.5%;
+}
+
 .lista{
-    border: solid green;
-    min-height: 25%;
-    max-width: 25%;
+    padding:1%;
+    width: 100%;
+    border: solid hsl(180, 1%, 65%);
+    border-width:1px 1px 1px 1px;
+    position:relative;
+    border-radius: 2%;
+    /* display: flex;
+    flex-direction: column;
+    align-self: flex-start; */
+    break-inside: avoid;
+    margin-bottom: 4%;
+}
+
+.drag{
+    cursor:move;
+}
+
+.rotulo{
+    position: absolute;
+    right:10%;
+    top:0;
+    background-color: green;
+    padding: 5px;
+}
+
+.rotulo button{
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.cabecera-lista{
+    padding-left: 5%;
+    padding-right: 5%;
+}
+
+.titulo{
+    word-wrap: break-word;
+}
+
+meter{
+    padding-left: 3%;
+    background: transparent;
+}
+
+.listmenu{
+    position:absolute;
+    right:4%;
 }
 
 .opcionesbtn {
-    background-color: #3498DB;
     color: white;
     padding: 5px;
     font-size: 10px;
     border: none;
     cursor: pointer;
+    max-height: 1.3em;
   }
 
 .opcionesbtn:hover, .opcionesbtn:focus {
@@ -172,9 +261,31 @@ ul{
     list-style-type: none;
 }
 
+.bottom-menu{
+    margin-top: auto;
+}
+
+.bottom-menu form{
+    display: flex;
+    justify-content: center;
+}
+
+.lista input[type="text"]{
+    background-color: #202124; /* Cambia "#fondo" al color de fondo de tu página */
+    border: none; /* Elimina el borde del input */
+    color: #fff; /* Cambia al color de texto deseado */
+    border: solid hsl(180, 1%, 65%);
+    border-width:1px 1px 1px 1px;
+    border-radius: 2%;
+}
+
+.retract-btn{
+    display: flex;
+    justify-content: center;
+}
+
 /* ITEM */
 .cabecera_item{
-    /* display: flex; */
     max-width: 95%;
     position: relative;
 }
@@ -190,8 +301,8 @@ ul{
     left: -1.5vw;
     padding: 0;
     border: none;
-    background-color: white;
-    color: white;
+    background-color: #202124;
+    cursor: pointer;
 }
 
 .checkbox img{
@@ -205,15 +316,10 @@ ul{
 
 /* CALENDARIO */
 
-.ventana-principal {
-    display: flex;
-    justify-content: center;
-}
-
 .calendario-trello {
     display: flex;
     flex-wrap: wrap;
-    max-width: 1900px; /* Ajusta el ancho máximo del calendario según sea necesario */
+    justify-content: center;
 }
 
 .encabezado-dia {
@@ -257,14 +363,4 @@ footer {
     background-color: #333;
     color: #fff;
     padding: 10px;
-}
-
-.barra{
-    border: solid red;
-}
-.barralateral{
-    border: solid red;
-}
-.ventanaprincipal{
-    border: solid red;
 }
