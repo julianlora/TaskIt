@@ -1,4 +1,5 @@
-- Si estoy en etiqueta "todas" mostrar la etiqueta de cada lista en la esquina
 - Pedir confirmacion por checkeos y descheckeos con dependencias
 - No permitir crear una lista con un titulo ya usado?
 - Agregar los cambios de ventana
+- Checkear que no exista una etqiueta con el mismo nombre al crearla
+- Al lado de la etiqueta un icono de editar para cambiar nombre o color. Puede estar al lado del titulo en la ventana principal o como hover en las etiquetas de la barra lateral

@@ -28,6 +28,7 @@ if($resultado!=0){
 	$_SESSION['id']=$respuesta['id'];
 	$_SESSION['ventana']='listas';
 	$_SESSION['etiqueta']='todas';
+	$_SESSION['accion'] = 'none';
 		
 	// 	echo "Hola ".$_SESSION['nombre']." ".$_SESSION['apellido']."<br />";
 	// 	echo "Acceso al panel de usuarios.<br/>";

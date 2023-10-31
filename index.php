@@ -7,6 +7,8 @@
     $controladoretiqueta = new EtiquetaController($conexion);
     require("controlador/CalendarioController.php");
     $controladorcalendario = new CalendarioController($conexion);
+    require("controlador/NotificacionController.php");
+    $controladornotificacion = new NotificacionController($conexion);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,7 +24,7 @@
     <header class="barra">
         <nav>
             <!-- Contenido de la barra de navegación, como logotipo, menús, etc. -->
-            BARRA DE NAVEGACION
+            <img class='logo' src="imagenes/Taskit2.png">
             <form class='buscador' method="post">
                 <label>Buscar
                 <input type='hidden' name='accion' value='buscar'>
@@ -32,7 +34,29 @@
             </form>
             <?php
             $usuario = $_SESSION['usuario'];
-            echo "<a class='profile' href='perfil/panel.php'><img class='profile-icon' src='imagenes/profile-circle.png'></a>"
+            echo "
+            <div class='usuario'>
+                <div class='notificaciones-btn'>
+                    <img class='bell' src='imagenes/bell.png'>";
+                    $pendiente = $controladornotificacion->getNotificacionesPendientes();
+                    if ($pendiente){
+                        echo"<img class='yellow-circle show' src='imagenes/yellow-circle.png'>";
+                    }
+            $show = '';
+            if($_SESSION['accion'] == 'notificacion abierta'){
+                $show = 'show';
+                $_SESSION['accion'] = 'notificacion leida';
+            }
+            echo"
+                </div>
+                <div id='notificaciones' class='notificaciones $show'>
+                    <h2>Notificaciones</h2>";
+                    $controladornotificacion->mostrarNotificaciones();
+            echo"
+                </div>
+                <p class='nombre-usuario'>$usuario</p>
+                <a class='profile' href='perfil/panel.php'><img class='profile-icon' src='imagenes/profile-circle.png'></a>
+            </div>"
             ?>
         </nav>
     </header>
@@ -59,6 +83,7 @@
                     $controladoretiqueta->insertarBotonCrearEtiqueta();
                 }
             ?>
+            <a href='to_listas_compartidas.php'><h2>Listas compartidas</h2></a>
             <a href='to_calendario.php'><h2>Calendario</h2></a>
         </aside>
 
@@ -67,7 +92,7 @@
             <!-- Contenido principal de la página, como tableros, tarjetas, listas, etc. -->
 
         <?php
-            if ($_SESSION['ventana'] == 'listas'){
+            if ($_SESSION['ventana'] != 'calendario'){
                 $controladorlista->mostrarListasEnPantalla($_SESSION['etiqueta']);
             } else {
                 $controladorcalendario->mostrarCalendario();

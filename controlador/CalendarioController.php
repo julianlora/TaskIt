@@ -6,9 +6,14 @@ class CalendarioController {
 
     public function __construct($conexion) {
         $this->conexion = $conexion;
-        // Buscar y guardar todas las fechas de finalizacion
-        $resultado = mysqli_query($this->conexion, "SELECT * from listas WHERE fecha_finalizacion IS NOT NULL");
-        $cant = mysqli_num_rows($resultado);
+        // Buscar y guardar todas las fechas de finalizacion de listas del usuario
+        $id_usuario = $_SESSION['id'];
+        $resultado = mysqli_query($this->conexion, "SELECT * from listas WHERE fecha_finalizacion IS NOT NULL and id_usuario = '$id_usuario'");
+        while($evento = mysqli_fetch_array($resultado)){
+            $this->eventos[] = $evento;
+        }
+        // Buscar y guardar todas las fechas de finalizacion de listas compartidas al usuario
+        $resultado = mysqli_query($this->conexion, "SELECT * from listas WHERE fecha_finalizacion IS NOT NULL and id IN (SELECT listas_compartidas.id_lista FROM listas_compartidas WHERE id_usuario = '$id_usuario' and rol != 'administrador')");
         while($evento = mysqli_fetch_array($resultado)){
             $this->eventos[] = $evento;
         }
@@ -69,7 +74,7 @@ class CalendarioController {
     public function buscarEvento($fecha_tarjeta){
         foreach($this->eventos as $evento){
             if($evento['fecha_finalizacion'] == $fecha_tarjeta){
-                echo "Finaliza el proyecto: ".$evento['titulo'];
+                echo "Finaliza el proyecto: ".$evento['titulo']."<br>";
             }
         }
     }

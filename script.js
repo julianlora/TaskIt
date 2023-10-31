@@ -15,6 +15,25 @@ window.addEventListener('click', function(event) {
             } else if (clase == 'cancelar_eliminar'){
                 let id_lista = clases[1]
                 document.getElementById(`ventana_confirmacion-${id_lista}`).classList.remove("ventana_confirmacion-activo")
+            } else if (clase == 'compartir'){
+                let id_lista = clases[3]
+                document.getElementById(`ventana_compartir-${id_lista}`).classList.add("ventana_compartir-activo")
+            } else if (clase == 'agregar_miembro'){
+                let id_lista = clases[1]
+                document.getElementById(`ventana_compartir-${id_lista}`).classList.add("ventana_compartir-activo")
+            } else if (clase == 'terminar_compartir'){
+                let id_lista = clases[1]
+                document.getElementById(`ventana_compartir-${id_lista}`).classList.remove("ventana_compartir-activo")
+                window.location.href = "to_terminar_compartir.php";
+            } else if (clase == 'share-img'){
+                document.getElementById(`miembros-${clases[1]}`).classList.toggle("show");
+            } else if (clase == 'bell' || clase == 'yellow-circle' || clase == 'notificaciones-btn'){
+                document.getElementById(`notificaciones`).classList.toggle("show");
+                if (document.querySelector('.yellow-circle').classList.contains("show")){
+                    document.querySelector('.yellow-circle').classList.remove("show")
+                    window.location.href = "to_notificacion_abierta.php";
+                }
+                
             }
         }
     } else {
@@ -24,7 +43,20 @@ window.addEventListener('click', function(event) {
 
 
 // MOVER LISTA
+
+const dragbtns = document.querySelectorAll('.drag'); // Todos los draggable
 const listas = document.querySelectorAll('.lista'); // Todos los containers donde se pueden dejar
+
+dragbtns.forEach(dragbtn => {
+    dragbtn.addEventListener('mouseover', () => {
+        document.getElementById(`${dragbtn.classList[1]}`).draggable = true
+    })
+
+    dragbtn.addEventListener('mouseleave', () => {
+        document.getElementById(`${dragbtn.classList[1]}`).draggable = false
+    })
+})
+
 listas.forEach(lista => {
     lista.addEventListener('dragstart', () => {
         lista.classList.add('dragging',`${lista.id}`)

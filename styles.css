@@ -23,6 +23,10 @@
     padding: 0;
     box-sizing: border-box;
 } */
+
+h1 {
+    margin:0;
+}
 body {
     display: flex;
     flex-direction: column;
@@ -42,6 +46,10 @@ nav{
     justify-content: space-between;
 }
 
+.logo{
+    max-height: 3em;
+}
+
 .buscador{
     align-self: center;
 }
@@ -53,6 +61,50 @@ nav{
     border: solid hsl(180, 1%, 100%);
     border-width:1px 1px 1px 1px;
     border-radius: 2%;
+}
+
+.usuario{
+    display: flex;
+}
+
+.notificaciones-btn{
+    
+    align-self: center;
+    margin-right: 1em;
+    cursor: pointer;
+    position: relative;
+}
+
+.bell{
+    max-height: 1.5em;
+}
+
+.yellow-circle{
+    display: none;
+    position: absolute;
+    height: 0.8em;
+    right:-7px;
+    top:-5px;
+}
+
+.notificaciones{
+    display: none;
+    position: absolute;
+    top:75px;
+    right: 5px;;
+    background-color: gray;
+    width: 380px;
+    max-height: 400px;
+    z-index: 100;
+    padding-left: 20px;
+}
+
+.notificacion{
+    display: flex;
+}
+
+.yellow-circle-notif{
+    height: 0.8em;
 }
 
 .profile{
@@ -75,7 +127,7 @@ nav{
 aside {
     background-color: #026aa7;
     color: #fff;
-    width: 250px;
+    width: 10%;
     padding: 10px;
 }
 
@@ -119,16 +171,60 @@ main{
     margin-bottom: 4%;
 }
 
+.top-menu{
+    display: flex;
+    justify-content: space-between;
+}
+
 .drag{
     cursor:move;
 }
 
-.rotulo{
+.drag img{
+    max-height: 1.5em;
+}
+
+.top-right-menu{
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.share-img{
+    max-height: 1.3em;
+    padding-right: 3px;
+    cursor: pointer;
+}
+
+.miembros{
+    display: none;
     position: absolute;
-    right:10%;
-    top:0;
-    background-color: green;
+    top:30px;
+    right:15px;
+    margin: 0;
+    padding: 10px;
+    background-color:#202124;
+    border: solid 1px #5f6368;
+    z-index: 100;
+    overflow: auto;
+}
+
+.owners{
+    padding-bottom: 5px;
+}
+
+.colaboradores{
+    border-top: solid 1px #5f6368;
+    margin-top: 5px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+.rotulo{
     padding: 5px;
+    margin:5px;
+    margin-top:0;
+    margin-bottom:0;
 }
 
 .rotulo button{
@@ -149,14 +245,10 @@ meter{
     background: transparent;
 }
 
-.listmenu{
-    position:absolute;
-    right:4%;
-}
-
 .opcionesbtn {
     color: white;
     padding: 5px;
+    padding-right: 7px;
     font-size: 10px;
     border: none;
     cursor: pointer;
@@ -164,7 +256,7 @@ meter{
   }
 
 .opcionesbtn:hover, .opcionesbtn:focus {
-    background-color: #2980B9;
+    /* background-color: #2980B9; */
 }
 
 .dropdown {
@@ -215,11 +307,16 @@ meter{
     border: none;
 }
 
+.starimg{
+    position: absolute;
+    max-height: 1em;
+}
+
 .eliminar{
     background-color: red;
 }
 
-.ventana_confirmacion {
+.ventana_confirmacion, .ventana_compartir {
     display: none;
     position: fixed;
     top: 0;
@@ -229,6 +326,7 @@ meter{
     background-color: rgba(0, 0, 0, 0.5);
     justify-content: center;
     align-items: center;
+    z-index: 100;
 }
 
 .confirmacion-contenido {
@@ -240,11 +338,11 @@ meter{
 }
 
 /* Para ocultar el fondo cuando se muestra la ventana de confimacion */
-.ventana_confirmacion-activo {
+.ventana_confirmacion-activo, .ventana_compartir-activo{
     display: flex;
 }
 
-.ventana_confirmacion-activo button{
+.ventana_confirmacion-activo button, .ventana_compartir-activo button{
     color: black;
 }
 

@@ -11,8 +11,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         case "crear_etiqueta":
             $texto = $_POST["etiqueta"];
+            $color = $_POST['colorInput'];
+            
             // Crear la consulta SQL
-            $sql = "INSERT INTO etiquetas (texto, id_usuario) VALUES ('$texto', '$id_usuario')";
+            $sql = "INSERT INTO etiquetas (texto, id_usuario, color) VALUES ('$texto', '$id_usuario', '$color')";
             // Ejecutar la consulta
             if (mysqli_query($conexion, $sql)) {
                 echo "Registro insertado con éxito.";
@@ -28,6 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $etiqueta = $_POST["etiqueta"];
             
             $_SESSION['etiqueta'] = $etiqueta;
+            $_SESSION['ventana'] = 'listas';
             
             header("Location: ../index.php");
             break;
