@@ -61,6 +61,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } else {
                 echo "Error al insertar el registro: " . mysqli_error($conexion);
             }
+
+            $result = mysqli_fetch_array(mysqli_query($conexion, "SELECT * FROM items WHERE texto='$texto' and nivel='$proximo_nivel' and id_lista='$id_lista'"));
+            $id_item = $result['id'];
+            descheckearHaciaArriba($id_item, $proximo_nivel, $id_lista, $id_item_padre, $conexion);
+            descheckearHaciaAbajo($id_item, $proximo_nivel, $id_lista, $id_item_padre, $conexion);
+
             mysqli_close($conexion);
             header("Location: ../index.php");
             break;
@@ -108,6 +114,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // VERIFICAR DEPENDENCIAS DE OTRAS TAREAS
             descheckearHaciaArriba($id_item, $nivel, $id_lista, $id_item_padre, $conexion);
             descheckearHaciaAbajo($id_item, $nivel, $id_lista, $id_item_padre, $conexion);
+
+            mysqli_close($conexion);
+            header("Location: ../index.php");
+            break;
+
+        case "eliminar_item":
+            $id_item = $_POST['id_item'];
+            $id_item_padre = $_POST['id_item_padre'];
+            $nivel = $_POST['nivel'];
+            $id_lista = $_POST['id_lista'];
+
+            // Eliminar
+            $sql = "DELETE FROM items WHERE id = '$id_item';";
+            if (mysqli_query($conexion, $sql)) {
+                echo "Item eliminado con éxito.";
+            } else {
+                echo "Error al eliminar el item: " . mysqli_error($conexion);
+            }
+
+            // Cambiar tipo del item padre si es necesario
+            echo $id_item_padre;
+            if($nivel > 0){
+                $sql = "SELECT * FROM items WHERE id_item_padre = '$id_item_padre';";
+                if($nivel == 1){
+                    $tipo = 'item';
+                } else {
+                    $tipo = 'subitem';
+                }
+                if (mysqli_num_rows(mysqli_query($conexion, $sql)) == 0){
+                    $sql = "UPDATE items SET tipo='$tipo' WHERE id = '$id_item_padre'";
+                    if (mysqli_query($conexion, $sql)) {
+                        echo "Registro actualizado con éxito.";
+                    } else {
+                        echo "Error al actualizar el registro: " . mysqli_error($conexion);
+                    }
+                }
+            }
+
+            checkearHaciaArriba($id_item, $nivel, $id_lista, $id_item_padre, $conexion);
+            checkearHaciaAbajo($id_item, $nivel, $id_lista, $id_item_padre, $conexion);
 
             mysqli_close($conexion);
             header("Location: ../index.php");

@@ -27,7 +27,7 @@ class CalendarioController {
         $cantidadDiasMesAnterior = cal_days_in_month(CAL_GREGORIAN, $mesActual-1, $añoActual);
         $nombreMes = date('F');
         $primerDiaDelMes = date('w', strtotime(date('Y-m-01')));
-        $numeroDiaActual = date('2', strtotime($hoy)); // 0 - 6 (domingo a sabado)
+        $numeroDiaActual = date('d', strtotime($hoy)); // 0 - 6 (domingo a sabado)
 
         echo"
         <main class='ventanaprincipal calendario'><br>
@@ -42,16 +42,19 @@ class CalendarioController {
             <div class='encabezado-dia'>Sábado</div><br>";
         for($i=0;$i<35;$i++){
             if ($i < $primerDiaDelMes){
-                $dia = $cantidadDiasMesAnterior - ($primerDiaDelMes + 1);
-                $fecha_tarjeta = date('Y-m-d', strtotime(date('Y-m-01') . " -$primerDiaDelMes days"));
+                $dia = $cantidadDiasMesAnterior - ($primerDiaDelMes - 1 - $i);
+                $resta = $primerDiaDelMes - $i;
+                $fecha_tarjeta = date('Y-m-d', strtotime(date('Y-m-01') . " -$resta days"));
                 $clase = 'dia extra';
-            } elseif ($i + 1 > $cantidadDias){
-                $dia = $i + 1 - $cantidadDias;
-                $fecha_tarjeta = date('Y-m-d', strtotime(date('Y-m-01') . " +$i days"));
+            } elseif (($i - $primerDiaDelMes + 1) > $cantidadDias){
+                $dia = $i - $primerDiaDelMes + 1 - $cantidadDias;
+                $suma = $i - $primerDiaDelMes;
+                $fecha_tarjeta = date('Y-m-d', strtotime(date('Y-m-01') . " +$suma days"));
                 $clase = 'dia extra';
             } else {
-                $dia = $i + 1;
-                $fecha_tarjeta = date('Y-m-d', strtotime(date('Y-m-01') . " +$i days"));
+                $dia = $i - $primerDiaDelMes + 1;
+                $suma = $dia - 1;
+                $fecha_tarjeta = date('Y-m-d', strtotime(date('Y-m-01') . " +$suma days"));
                 if ($fecha_tarjeta == $hoy){
                     $clase = 'hoy dia';
                 } else {

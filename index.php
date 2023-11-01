@@ -24,7 +24,7 @@
     <header class="barra">
         <nav>
             <!-- Contenido de la barra de navegación, como logotipo, menús, etc. -->
-            <img class='logo' src="imagenes/Taskit2.png">
+            <a href='index.php'><img class='logo' src="imagenes/Taskit2.png"></a>
             <form class='buscador' method="post">
                 <label>Buscar
                 <input type='hidden' name='accion' value='buscar'>
@@ -55,7 +55,11 @@
             echo"
                 </div>
                 <p class='nombre-usuario'>$usuario</p>
-                <a class='profile' href='perfil/panel.php'><img class='profile-icon' src='imagenes/profile-circle.png'></a>
+                <img class='profile-img' src='imagenes/profile-circle.png'>
+                <div class='panel'>
+                    Hola! $usuario
+                    <a href='perfil/salir.php'>Cerrar sesión</a>
+                </div>
             </div>"
             ?>
         </nav>
@@ -88,8 +92,6 @@
         </aside>
 
         <!-- Ventana Principal -->
-        <!-- <main class="ventanaprincipal"> -->
-            <!-- Contenido principal de la página, como tableros, tarjetas, listas, etc. -->
 
         <?php
             if ($_SESSION['ventana'] != 'calendario'){
@@ -100,7 +102,6 @@
             
         ?>
             
-        <!-- </main> -->
     </div>
 
     <!-- Footer (Opcional) -->

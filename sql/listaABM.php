@@ -56,7 +56,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         case "eliminar_lista":
             $id_lista = $_POST['id_lista'];
-            // Crear la consulta SQL
             $sql = "DELETE FROM listas WHERE id = '$id_lista';";
             if (mysqli_query($conexion, $sql)) {
                 echo "Registro eliminado con éxito.";

@@ -44,11 +44,12 @@ class ItemController {
         $nivel = $item['nivel'];
         $tipo = $item['tipo'];
         $checked = $item['checked'];
+        $id_item_padre = $item['id_item_padre'];
 
         echo "
-            <div class='item'>
+            <div id='$id_item' class='item'>
                 <li>
-                    <div class='cabecera_item'>";
+                    <div class='cabecera-item $id_item'>";
         
         // CHECKBOX
         if (!$checked){
@@ -70,26 +71,21 @@ class ItemController {
                             <input type='hidden' name='id_lista' value='$id_lista'>
                             <button class='checkbox'><img class='$clase' src='$img_path'></button>
                         </form>
-                        <p class='item-texto'>$texto<p>";
-                        
-        
-        if (isset($_POST['accion']) && $_POST['accion'] == 'nuevo_subitem' && $_POST['id_item'] == $id_item){
-            $this->insertarFormularioCrearSubitem($id_item, $nivel);
-        } else {
-            // BOTON DE NUEVO SUBITEM
-            echo "
-                        <form class='nuevo_subitem_btn' method='post'>
-                            <input type='hidden' name='accion' value='nuevo_subitem'>
-                            <input type='hidden' name='id_item' value='$id_item'>
-                            <input type='hidden' name='id_lista' value='$id_lista'>
-                            <button class='nuevo-subitem-btn' type='submit'>+</button>
-                        </form>
-            ";
-        }
-
-        echo"
+                        <p class='item-texto'>$texto</p>
+                        <span class='item-menu m$id_item'>
+                            <button class='nuevo-subitem-btn s$id_item'>+</button>
+                            <form class='eliminar-item' action='sql/itemABM.php' method='post'>
+                                <input type='hidden' name='accion' value='eliminar_item'>
+                                <input type='hidden' name='id_item' value='$id_item'>
+                                <input type='hidden' name='nivel' value='$nivel'>
+                                <input type='hidden' name='id_lista' value='$id_lista'>
+                                <input type='hidden' name='id_item_padre' value='$id_item_padre'>
+                                <button type='submit'>x</button>
+                            </form>
+                        </span>
                     </div>
-        ";
+                    ";
+                    $this->insertarFormularioCrearSubitem($id_item, $nivel);
 
         // SUBITEMS DEL ITEM
         if($tipo == 'sublista'){
@@ -112,7 +108,7 @@ class ItemController {
 
     public function insertarFormularioCrearSubitem($id_sublista, $nivel){
         echo "
-            <form action='sql/itemABM.php' method='post'>
+            <form class='crear-subitem s$id_sublista' action='sql/itemABM.php' method='post'>
                 <input type='hidden' name='accion' value='agregar_subitem'>
                 <input type='hidden' name='id_sublista' value='$id_sublista'>
                 <input type='hidden' name='nivel' value='$nivel'>

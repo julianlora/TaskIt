@@ -12,12 +12,23 @@ class ListaController {
 
     public function cargarListasDelUsuario(){
         $id = $_SESSION['id'];
-        if (!isset($_POST['accion']) || $_POST['accion'] != 'buscar'){ // No filtradas por buscador
+        // No filtradas por buscador
+        if (!isset($_POST['accion']) || $_POST['accion'] != 'buscar'){
             $resultado = mysqli_query($this->conexion, "
             SELECT * from listas
             WHERE id_usuario = '$id'
             ORDER BY id DESC");
-        } else { // Filtradas por buscador
+            while($fila = mysqli_fetch_array($resultado)){
+                $this->listas[] = $fila;
+            }
+            // Cargar listas de las que es miembro excepto las creadas por el usuario
+            $resultado = mysqli_query($this->conexion, "SELECT * FROM listas WHERE id IN (SELECT listas_compartidas.id_lista from listas_compartidas WHERE listas_compartidas.id_usuario = '$id') and id_usuario != $id");
+            while($fila = mysqli_fetch_array($resultado)){
+                $this->listas[] = $fila;
+            }
+         // Filtradas por buscador
+        } else { 
+            // Propias
             $busqueda = $_POST['busqueda'];
             $resultado = mysqli_query($this->conexion, "
             SELECT * from listas
@@ -26,15 +37,23 @@ class ListaController {
                 WHERE items.id_lista = listas.id and items.texto LIKE '%$busqueda%'
             ) > 0) 
             ORDER BY id DESC");
-        }
-        while($fila = mysqli_fetch_array($resultado)){
-            $this->listas[] = $fila;
-        }
-
-        // Cargar listas de las que es miembro excepto las creadas por el usuario
-        $resultado = mysqli_query($this->conexion, "SELECT * FROM listas WHERE id IN (SELECT listas_compartidas.id_lista from listas_compartidas WHERE listas_compartidas.id_usuario = '$id') and id_usuario != $id");
-        while($fila = mysqli_fetch_array($resultado)){
-            $this->listas[] = $fila;
+            while($fila = mysqli_fetch_array($resultado)){
+                $this->listas[] = $fila;
+            }
+            // Compartidas
+            $resultado = mysqli_query($this->conexion, "
+            SELECT * from listas
+            WHERE id IN (
+                SELECT listas_compartidas.id_lista FROM listas_compartidas
+                WHERE listas_compartidas.id_usuario = '$id' and listas_compartidas.rol != 'administrador'
+            ) and (titulo LIKE '%$busqueda%' or (
+                SELECT COUNT(items.id) FROM items
+                WHERE items.id_lista = listas.id and items.texto LIKE '%$busqueda%'
+            ) > 0) 
+            ORDER BY id DESC");
+            while($fila = mysqli_fetch_array($resultado)){
+                $this->listas[] = $fila;
+            }
         }
     }
 
@@ -76,11 +95,11 @@ class ListaController {
 
     public function mostrarListasEnPantalla($etiqueta){
         $item_controlador = new ItemController($this->conexion);
+        echo "<main>";
         if (isset($_POST['accion']) && $_POST['accion'] == 'buscar'){ // Si se realizó una búsqueda
             $busqueda = $_POST['busqueda'];
             echo "Resultados de búsqueda por '$busqueda':";
         }
-        echo "<main>";
         if($etiqueta != 'todas'){
             echo "<h1>$etiqueta</h1>";
         }

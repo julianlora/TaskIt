@@ -41,6 +41,14 @@ button{
     cursor: pointer;
 }
 
+a {
+    text-decoration: none;
+}
+
+a:link, :visited{
+    color: #fff;
+}
+
 nav{
     display: flex;
     justify-content: space-between;
@@ -91,7 +99,7 @@ nav{
     display: none;
     position: absolute;
     top:75px;
-    right: 5px;;
+    right: 5px;
     background-color: gray;
     width: 380px;
     max-height: 400px;
@@ -107,14 +115,21 @@ nav{
     height: 0.8em;
 }
 
-.profile{
-    display: flex;
+.profile-img{
     padding-left: 0.5vw;
-}
-
-.profile-icon{
     max-width: 2em;
     align-self: center;
+}
+
+.panel{
+    display: none;
+    width: 200px;
+    height: 300px;
+    position:absolute;
+    top:75px;
+    right: 5px;
+    background-color: gray;
+    z-index: 100;
 }
 
 /* Estilos para el contenedor de la barra lateral y la ventana principal */
@@ -255,10 +270,6 @@ meter{
     max-height: 1.3em;
   }
 
-.opcionesbtn:hover, .opcionesbtn:focus {
-    /* background-color: #2980B9; */
-}
-
 .dropdown {
     position: relative;
     display: inline-block;
@@ -285,8 +296,6 @@ meter{
     display: block;
     width: 160px;
 }
-
-.show {display: block;}
 
 .paper-btn{
     background:none;
@@ -357,6 +366,7 @@ meter{
 
 ul{
     list-style-type: none;
+    padding-inline-start: 30px;
 }
 
 .bottom-menu{
@@ -383,20 +393,25 @@ ul{
 }
 
 /* ITEM */
-.cabecera_item{
-    max-width: 95%;
+
+.cabecera-item{
+    max-width: 100%;
     position: relative;
+    display: flex   ;
 }
 
 .item-texto{
-    margin: 0; /* Elimina el margen predeterminado del párrafo */
     white-space: pre-line; /* Permite saltos de línea en espacios en blanco */
-    word-wrap: break-word; 
+    word-wrap: break-word;
+    margin-bottom:13px;
+    margin-top: 0;
+    max-width: 90%;
+    padding-left: 8px;
 }
 
 .checkbox {
     position: absolute;
-    left: -1.5vw;
+    left: -20px;
     padding: 0;
     border: none;
     background-color: #202124;
@@ -407,9 +422,15 @@ ul{
     max-height: 20px;
 }
 
-.nuevo-subitem-btn{
-    position:absolute;
-    left:-10%;
+.item-menu{
+    display: flex;
+    position: absolute;
+    right:0;
+    visibility: hidden;
+}
+
+.crear-subitem{
+    display: none;
 }
 
 /* CALENDARIO */
@@ -442,7 +463,7 @@ ul{
 }
 
 .dia.hoy{
-    background-color: aqua;
+    background-color: turquoise;
 }
 
 .dia.extra{
@@ -461,4 +482,11 @@ footer {
     background-color: #333;
     color: #fff;
     padding: 10px;
+}
+
+.show {display: block;}
+
+.panel.show{
+    display: flex;
+    flex-direction: column;
 }
