@@ -58,7 +58,7 @@ window.addEventListener('click', function(event) {
     }
 });
 
-
+// VISIBILIDAD DE MENU DE ITEMS
 const items = document.querySelectorAll('.cabecera-item')
 items.forEach(item => {
     item.addEventListener('mouseover', () =>{

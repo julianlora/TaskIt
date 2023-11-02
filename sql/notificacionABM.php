@@ -2,20 +2,22 @@
 session_start();
 include("../connect.php");
 
-if (isset($_SESSION['notificar']) && $_SESSION['notificar'] = true) {
-    
-    $id_usuario_destino = $_SESSION['id_usuario_destino'];
-    $texto = $_SESSION['notificacion'];
-    $fecha = date('Y-m-d');
+if (isset($_SESSION['notificar']) && $_SESSION['notificar'] == true) {
 
-    // Crear notificacion
-    $sql = "INSERT INTO notificaciones (id_usuario_destino, texto, fecha) VALUES ('$id_usuario_destino', '$texto', '$fecha')";
-    if (mysqli_query($conexion, $sql)) {
-        echo "Notificación creada con éxito.";
-    } else {
-        echo "Error al crear notificación: " . mysqli_error($conexion);
+    foreach ($_SESSION['notificaciones'] as $notificacion) {
+        $id_usuario_destino = $notificacion['destinatario'];
+        $mensaje = $notificacion['mensaje'];
+        $fecha = date('Y-m-d');
+        // Crear notificacion
+        $sql = "INSERT INTO notificaciones (id_usuario_destino, mensaje, fecha) VALUES ('$id_usuario_destino', '$mensaje', '$fecha')";
+        if (mysqli_query($conexion, $sql)) {
+            echo "Notificación creada con éxito.";
+        } else {
+            echo "Error al crear notificación: " . mysqli_error($conexion);
+        }
     }
-
+    
+    $_SESSION['notificar'] = false;
     mysqli_close($conexion);
     header("Location: ../index.php");
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-10-2023 a las 12:26:50
+-- Tiempo de generación: 01-11-2023 a las 14:31:55
 -- Versión del servidor: 8.0.34
 -- Versión de PHP: 8.2.4
 
@@ -30,6 +30,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `etiquetas` (
   `id` int NOT NULL,
   `texto` varchar(20) NOT NULL,
+  `color` varchar(10) NOT NULL,
   `id_usuario` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -37,10 +38,11 @@ CREATE TABLE `etiquetas` (
 -- Volcado de datos para la tabla `etiquetas`
 --
 
-INSERT INTO `etiquetas` (`id`, `texto`, `id_usuario`) VALUES
-(11, 'erere', 3),
-(12, 'ssdsdsd', 3),
-(13, 'sdasfag', 3);
+INSERT INTO `etiquetas` (`id`, `texto`, `color`, `id_usuario`) VALUES
+(19, 'Universidad', '#1ebe20', 3),
+(20, 'Trabajo', '#ff00a2', 3),
+(22, 'Personal', '#0040ff', 3),
+(23, 'Personal', '#ffbb00', 1);
 
 -- --------------------------------------------------------
 
@@ -63,9 +65,58 @@ CREATE TABLE `items` (
 --
 
 INSERT INTO `items` (`id`, `texto`, `id_lista`, `nivel`, `tipo`, `checked`, `id_item_padre`) VALUES
-(72, 'item', 41, 0, 'sublista', 0, NULL),
-(73, 'ddsmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm', 41, 1, 'sublista', 0, 72),
-(74, 'sss', 41, 2, 'subitem', 0, 73);
+(81, 'Tarea1', 69, 0, 'sublista', 0, NULL),
+(82, 'Tarea2', 69, 0, 'item', 0, NULL),
+(83, 'Tarea3', 69, 0, 'sublista', 0, NULL),
+(84, 'Tarea4', 69, 0, 'item', 0, NULL),
+(85, 'Subtarea1', 69, 1, 'sublista', 0, 81),
+(86, 'Subtarea2', 69, 1, 'subitem', 0, 81),
+(87, 'Subtarea', 69, 1, 'subitem', 0, 83),
+(88, 'Subtarea', 69, 2, 'subitem', 0, 85),
+(89, 'Subtarea', 69, 2, 'subitem', 0, 85),
+(90, 'Tarea1', 71, 0, 'item', 1, NULL),
+(91, 'Tarea2', 71, 0, 'item', 0, NULL),
+(99, 'Buscador', 72, 0, 'sublista', 1, NULL),
+(100, 'Calendario', 72, 0, 'item', 1, NULL),
+(101, 'Perfil', 72, 0, 'item', 0, NULL),
+(102, 'Compartir listas', 72, 0, 'sublista', 0, NULL),
+(103, 'Enviar mail', 72, 0, 'item', 0, NULL),
+(104, 'Items', 72, 0, 'sublista', 0, NULL),
+(105, 'Notificaciones', 72, 0, 'item', 1, NULL),
+(106, 'pan', 75, 0, 'item', 0, NULL),
+(107, 'yerba', 75, 0, 'item', 0, NULL),
+(108, 'salame', 75, 0, 'item', 0, NULL),
+(109, 'aceitunas', 75, 0, 'item', 0, NULL),
+(111, 'aceite de coco', 75, 0, 'item', 0, NULL),
+(112, 'alfajor terrabusi triple', 75, 0, 'item', 0, NULL),
+(113, 'una cosa', 73, 0, 'item', 1, NULL),
+(114, 'otra cosa', 73, 0, 'item', 0, NULL),
+(115, 'mas cosas', 73, 0, 'sublista', 1, NULL),
+(116, 'uno', 73, 1, 'subitem', 1, 115),
+(118, 'Suscripcion', 72, 0, 'item', 0, NULL),
+(119, 'Contacto', 72, 0, 'item', 0, NULL),
+(120, 'mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm', 71, 0, 'item', 0, NULL),
+(121, 'Tarealargaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 71, 0, 'item', 0, NULL),
+(122, 'Agregar eliminar miembro', 72, 1, 'subitem', 0, 102),
+(123, 'Checkbox', 72, 0, 'sublista', 1, NULL),
+(124, 'cuando se agrega un subitem no se actualizan', 72, 1, 'subitem', 1, 123),
+(125, 'editar texto', 72, 1, 'subitem', 0, 104),
+(126, 'mover', 72, 1, 'subitem', 0, 104),
+(128, 'Agregar roles', 72, 1, 'subitem', 0, 102),
+(129, 'Listas', 72, 0, 'sublista', 0, NULL),
+(130, 'falta checkear titulo al crear', 72, 1, 'subitem', 0, 129),
+(131, 'esconder checkeados', 72, 1, 'subitem', 0, 129),
+(133, 'modificar etiqueta', 72, 1, 'subitem', 0, 129),
+(134, 'modificar fecha de finalizacion', 72, 1, 'subitem', 0, 129),
+(137, 'cosa1', 73, 0, 'item', 0, NULL),
+(157, 'tipos de items', 72, 1, 'subitem', 0, 104),
+(158, 'abandonar lista', 72, 1, 'subitem', 0, 102),
+(159, 'dolares', 75, 0, 'item', 0, NULL),
+(161, 'archivos adjuntos', 72, 1, 'subitem', 0, 129),
+(162, 'no toma en cuenta listas compartidas', 72, 1, 'subitem', 1, 99),
+(163, 'Cerrar ventanas al abrir otras', 72, 0, 'item', 0, NULL),
+(164, 'mover', 72, 1, 'sublista', 0, 129),
+(165, 'hay problemas probablemente con la acumulacion de eventos', 72, 2, 'subitem', 0, 164);
 
 -- --------------------------------------------------------
 
@@ -75,19 +126,78 @@ INSERT INTO `items` (`id`, `texto`, `id_lista`, `nivel`, `tipo`, `checked`, `id_
 
 CREATE TABLE `listas` (
   `id` int NOT NULL,
-  `titulo` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `titulo` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `etiqueta` varchar(20) DEFAULT NULL,
   `id_usuario` int NOT NULL,
-  `fecha_finalizacion` date DEFAULT NULL
+  `fecha_finalizacion` date DEFAULT NULL,
+  `acceso` varchar(10) NOT NULL DEFAULT 'privado'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `listas`
 --
 
-INSERT INTO `listas` (`id`, `titulo`, `etiqueta`, `id_usuario`, `fecha_finalizacion`) VALUES
-(40, 'aaaaaaaa', NULL, 3, NULL),
-(41, 'fhafhaha', NULL, 3, NULL);
+INSERT INTO `listas` (`id`, `titulo`, `etiqueta`, `id_usuario`, `fecha_finalizacion`, `acceso`) VALUES
+(69, 'Metodología de Sistemas', 'Universidad', 3, '2023-11-03', 'compartido'),
+(71, 'Proyecto', 'Trabajo', 3, NULL, 'privado'),
+(72, 'Laboratorio 4', 'Universidad', 3, '2023-11-01', 'compartido'),
+(73, 'Lista sin etiqueta', NULL, 3, '2023-11-11', 'privado'),
+(75, 'Lista de compras', 'Personal', 3, NULL, 'privado'),
+(84, 'asdasd', NULL, 3, NULL, 'compartido'),
+(85, 'nueva lista', NULL, 3, NULL, 'privado'),
+(86, 'nueva lista', NULL, 1, NULL, 'privado'),
+(87, 'asdasdsa', 'Personal', 1, NULL, 'privado');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `listas_compartidas`
+--
+
+CREATE TABLE `listas_compartidas` (
+  `id` int NOT NULL,
+  `id_usuario` int NOT NULL,
+  `rol` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'colaborador',
+  `id_lista` int NOT NULL,
+  `id_etiqueta` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `listas_compartidas`
+--
+
+INSERT INTO `listas_compartidas` (`id`, `id_usuario`, `rol`, `id_lista`, `id_etiqueta`) VALUES
+(8, 3, 'administrador', 72, NULL),
+(9, 1, 'colaborador', 72, NULL),
+(26, 3, 'administrador', 84, NULL),
+(27, 1, 'colaborador', 84, NULL),
+(28, 3, 'administrador', 69, NULL),
+(29, 1, 'colaborador', 69, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `notificaciones`
+--
+
+CREATE TABLE `notificaciones` (
+  `id` int NOT NULL,
+  `id_usuario_destino` int NOT NULL,
+  `texto` varchar(100) NOT NULL,
+  `estado` varchar(10) NOT NULL DEFAULT 'pendiente',
+  `fecha` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `notificaciones`
+--
+
+INSERT INTO `notificaciones` (`id`, `id_usuario_destino`, `texto`, `estado`, `fecha`) VALUES
+(3, 1, 'admin2 te ha compartido la lista ddffd.', 'leido', '2023-10-31'),
+(4, 1, 'admin2 te ha compartido la lista aaaaaaaaa.', 'leido', '2023-10-31'),
+(5, 3, 'admin te ha compartido la lista asdfasfa.', 'leido', '2023-10-31'),
+(6, 1, 'admin2 te ha compartido la lista asdasd.', 'leido', '2023-10-31'),
+(7, 1, 'admin2 te ha compartido la lista Metodología de Sistemas.', 'leido', '2023-11-01');
 
 -- --------------------------------------------------------
 
@@ -136,6 +246,22 @@ ALTER TABLE `listas`
   ADD KEY `id_usuario` (`id_usuario`);
 
 --
+-- Indices de la tabla `listas_compartidas`
+--
+ALTER TABLE `listas_compartidas`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_lista` (`id_lista`),
+  ADD KEY `id_usuario` (`id_usuario`),
+  ADD KEY `id_etiqueta` (`id_etiqueta`);
+
+--
+-- Indices de la tabla `notificaciones`
+--
+ALTER TABLE `notificaciones`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_usuario_destino` (`id_usuario_destino`);
+
+--
 -- Indices de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
@@ -149,19 +275,31 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `etiquetas`
 --
 ALTER TABLE `etiquetas`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT de la tabla `items`
 --
 ALTER TABLE `items`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=166;
 
 --
 -- AUTO_INCREMENT de la tabla `listas`
 --
 ALTER TABLE `listas`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
+
+--
+-- AUTO_INCREMENT de la tabla `listas_compartidas`
+--
+ALTER TABLE `listas_compartidas`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+
+--
+-- AUTO_INCREMENT de la tabla `notificaciones`
+--
+ALTER TABLE `notificaciones`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
@@ -191,6 +329,20 @@ ALTER TABLE `items`
 --
 ALTER TABLE `listas`
   ADD CONSTRAINT `listas_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+--
+-- Filtros para la tabla `listas_compartidas`
+--
+ALTER TABLE `listas_compartidas`
+  ADD CONSTRAINT `listas_compartidas_ibfk_1` FOREIGN KEY (`id_lista`) REFERENCES `listas` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  ADD CONSTRAINT `listas_compartidas_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  ADD CONSTRAINT `listas_compartidas_ibfk_3` FOREIGN KEY (`id_etiqueta`) REFERENCES `etiquetas` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+--
+-- Filtros para la tabla `notificaciones`
+--
+ALTER TABLE `notificaciones`
+  ADD CONSTRAINT `notificaciones_ibfk_1` FOREIGN KEY (`id_usuario_destino`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

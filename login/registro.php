@@ -26,7 +26,7 @@
 	// }
 
 
-	include("connect.php");
+	include("../connect.php");
 
 	// $_SESSION['nombre'] = $nombre;
 

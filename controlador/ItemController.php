@@ -8,7 +8,7 @@ class ItemController {
         $this->conexion = $conexion;
     }
 
-    public function cargarItemsDeLista($id_lista, $nivel){
+    public function cargarItemsDeLista($id_lista, $nivel, $rol){
 
         $resultado = mysqli_query($this->conexion, "
         SELECT * from items
@@ -16,13 +16,13 @@ class ItemController {
         ");
         while($item = mysqli_fetch_array($resultado)){
             $this->items[] = $item;
-            $this->mostrarItemEnPantalla($item);
+            $this->mostrarItemEnPantalla($item, $rol);
         }
         // mysqli_close($this->conexion);
         
     }
 
-    public function cargarSubItemsDeLista($id_item_padre, $nivel, $id_lista){
+    public function cargarSubItemsDeLista($id_item_padre, $nivel, $id_lista, $rol){
 
         $resultado = mysqli_query($this->conexion, "
         SELECT * from items
@@ -30,13 +30,13 @@ class ItemController {
         ");
         while($item = mysqli_fetch_array($resultado)){
             $this->items[] = $item;
-            $this->mostrarItemEnPantalla($item);
+            $this->mostrarItemEnPantalla($item, $rol);
         }
         // mysqli_close($this->conexion);
         
     }
 
-    public function mostrarItemEnPantalla($item){
+    public function mostrarItemEnPantalla($item, $rol){
 
         $texto = $item['texto'];
         $id_item = $item['id'];
@@ -63,15 +63,21 @@ class ItemController {
             $clase = 'checked';
             $img_path = '../TaskIt/imagenes/checked.png';
         }
-        echo "
+        if ($rol != 'lector'){
+            echo "
                         <form action='sql/itemABM.php' method='post'>
                             <input type='hidden' name='accion' value='$accion'>
                             <input type='hidden' name='id_item' value='$id_item'>
                             <input type='hidden' name='nivel' value='$nivel'>
                             <input type='hidden' name='id_lista' value='$id_lista'>
-                            <button class='checkbox'><img class='$clase' src='$img_path'></button>
-                        </form>
-                        <p class='item-texto'>$texto</p>
+                            <button class='checkbox no-lector'><img class='$clase' src='$img_path'></button>
+                        </form>";
+        } else {
+            echo"       <span class='checkbox'><img class='$clase' src='$img_path'></span>";
+        }
+        echo"           <p class='item-texto'>$texto</p>";
+        if($rol!='lector'){
+            echo"
                         <span class='item-menu m$id_item'>
                             <button class='nuevo-subitem-btn s$id_item'>+</button>
                             <form class='eliminar-item' action='sql/itemABM.php' method='post'>
@@ -86,6 +92,8 @@ class ItemController {
                     </div>
                     ";
                     $this->insertarFormularioCrearSubitem($id_item, $nivel);
+        }
+        
 
         // SUBITEMS DEL ITEM
         if($tipo == 'sublista'){
@@ -93,7 +101,7 @@ class ItemController {
                     <ul>
                     ";
                     $proximo_nivel = $nivel + 1;
-                    $this->cargarSubItemsDeLista($id_item, $proximo_nivel, $id_lista);
+                    $this->cargarSubItemsDeLista($id_item, $proximo_nivel, $id_lista, $rol);
                     echo "
                     </ul>
             ";

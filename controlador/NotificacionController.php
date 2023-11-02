@@ -28,10 +28,10 @@ class NotificacionController {
 
     public function mostrarNotificaciones(){
         foreach($this->notificaciones as $notif){
-            $texto = $notif['texto'];
+            $mensaje = $notif['mensaje'];
             echo"
             <div class='notificacion'>
-                <p>- $texto</p>";
+                <p>- $mensaje</p>";
                 if($notif['estado'] == 'pendiente'){
                     echo"<img class='yellow-circle-notif' src='../TaskIt/imagenes/yellow-circle.png'>";
                 }

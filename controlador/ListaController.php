@@ -10,6 +10,14 @@ class ListaController {
         $this->cargarListasDelUsuario();
     }
 
+    public function getLista($id){
+        foreach($this->listas as $lista){
+            if($lista['id'] == $id){
+                return $lista;
+            }
+        }
+    }
+
     public function cargarListasDelUsuario(){
         $id = $_SESSION['id'];
         // No filtradas por buscador
@@ -145,8 +153,8 @@ class ListaController {
                                             echo"
                                             <img class='starimg' src='../TaskIt/imagenes/star.png'>
                                             <button id='mostrarVentana-$id' class='paper-btn opcionbtn compartir $id show'>Compartir</button>";
-                                            $this->insertarOpcionEliminar($lista);
                                         }
+                                        $this->insertarOpcionEliminarOAbandonar($lista, $rol);
                 echo"
                                     </div>
                                 </div>
@@ -163,16 +171,19 @@ class ListaController {
                         </h1>
                     </div>
                     <ul class='mainlist'>";
-                    $item_controlador->cargarItemsDeLista($id, 0);
+                    $item_controlador->cargarItemsDeLista($id, 0, $rol);
                 echo "
                     </ul>
-                    <div class='bottom-menu'>
-                        <form action='sql/itemABM.php' method='post'>
+                    <div class='bottom-menu'>";
+                if($rol!='lector'){
+                    echo"<form action='sql/itemABM.php' method='post'>
                             <input type='hidden' name='accion' value='agregar_item'>
                             <input type='hidden' name='id_lista' value='$id'>
                             <input class='input-lista' type='text' name='texto' required>
                             <button type='submit'>Agregar tarea</button>
-                        </form><br>
+                        </form><br>";
+                }
+                echo"
                         <div class='retract-btn'>
                             <button class='retractlistbtn'>^</button>
                         </div>
@@ -189,13 +200,18 @@ class ListaController {
         $id_usuario = $_SESSION['id'];
         // Buscar administradores
         $admins = mysqli_query($this->conexion, "SELECT usuario FROM usuarios WHERE usuarios.id IN (SELECT id_usuario from listas_compartidas WHERE listas_compartidas.id_lista = '$id' and rol = 'administrador') ORDER BY usuario;");
+        $cantAdmins = mysqli_num_rows($admins);
         // Buscar colaboradores
-        $miembros = mysqli_query($this->conexion, "SELECT usuario FROM usuarios WHERE usuarios.id IN (SELECT id_usuario from listas_compartidas WHERE listas_compartidas.id_lista = '$id' and rol = 'colaborador') ORDER BY usuario;");
+        $colaboradores = mysqli_query($this->conexion, "SELECT usuario FROM usuarios WHERE usuarios.id IN (SELECT id_usuario from listas_compartidas WHERE listas_compartidas.id_lista = '$id' and rol = 'colaborador') ORDER BY usuario;");
+        $cantColaboradores = mysqli_num_rows($colaboradores);
+        // Buscar lectores
+        $lectores = mysqli_query($this->conexion, "SELECT usuario FROM usuarios WHERE usuarios.id IN (SELECT id_usuario from listas_compartidas WHERE listas_compartidas.id_lista = '$id' and rol = 'lector') ORDER BY usuario;");
+        $cantLectores = mysqli_num_rows($lectores);
         // Ventana de miembros
         echo"
         <img class='share-img $id' src='../TaskIt/imagenes/share2.png'>
         <ul id='miembros-$id' class='miembros'>
-            <li class='owners'><b>Administradores:</b></li>";
+            <li class='owners'><b>Administradores ($cantAdmins):</b></li>";
             $flag = false;
             while($admin = mysqli_fetch_array($admins)){
                 $admin = $admin[0];
@@ -204,10 +220,15 @@ class ListaController {
                     $flag = true;
                 }
             }
-            echo"<li class='colaboradores'><b>Colaboradores:</b></li>";
-            while($miembro = mysqli_fetch_array($miembros)){
-                $miembro = $miembro[0];
-                echo "<li class='miembro'>$miembro</li>";
+            echo"<li class='colaboradores'><b>Colaboradores ($cantColaboradores):</b></li>";
+            while($colaborador = mysqli_fetch_array($colaboradores)){
+                $colaborador = $colaborador[0];
+                echo "<li class='colaborador'>$colaborador</li>";
+            }
+            echo"<li class='lectores'><b>Lectores ($cantLectores):</b></li>";
+            while($lector = mysqli_fetch_array($lectores)){
+                $lector = $lector[0];
+                echo "<li class='lector'>$lector</li>";
             }
         // Agregar miembros solo dueños
         if ($flag){
@@ -244,7 +265,7 @@ class ListaController {
 
         // Activar ventana para dar feedback
         if(isset($_SESSION['accion']) && $_SESSION['accion'] == 'compartir' && $_SESSION['id_lista'] == $id){
-            $clase = 'ventana_compartir ventana_compartir-activo show';
+            $clase = 'ventana_compartir ventana_compartir-activo';
         } else {
             $clase = 'ventana_compartir';
         }
@@ -272,6 +293,12 @@ class ListaController {
                         <input type='text' name='usuario' placeholder='Agregar persona' required>
                         <input type='hidden' name='accion' value='compartir_lista'>
                         <input type='hidden' name='id_lista' value='$id'>
+                        <label for='rol'>Rol</label>
+                        <select name='rol'>
+                            <option value='colaborador' selected>Colaborador</option>
+                            <option value='administrador'>Administrador (sólo usuarios premium)</option>
+                            <option value='lector'>Lector</option>
+                        </select>
                         <button class='confirmar_compartir' type='submit'>Compartir</button>
                     </form>
                     <button class='terminar_compartir $id'>Listo</button>
@@ -281,13 +308,21 @@ class ListaController {
         ";
     }
 
-    public function insertarOpcionEliminar($lista){
+    public function insertarOpcionEliminarOAbandonar($lista, $rol){
         $id = $lista['id'];
         $titulo = $lista['titulo'];
+        
+        if($rol == 'administrador'){
+            $boton = 'Eliminar';
+            $accion = 'eliminar_lista';
+        } else {
+            $boton = 'Abandonar';
+            $accion = 'abandonar_lista';
+        }
 
-        // Botón para eliminar
+        // Botón para eliminar o abandonar
         echo"
-        <button id='mostrarVentana-$id' class='paper-btn opcionbtn eliminar $id show'>Eliminar</button>";
+        <button id='mostrarVentana-$id' class='paper-btn opcionbtn eliminar $id show'>$boton</button>";
 
         // Ventana de confirmacion escondida
         echo"
@@ -296,9 +331,9 @@ class ListaController {
                 <h2>¿Desea eliminar la lista $titulo?</h2>
                 <div class='confirmacion-botones'>
                     <form action='sql/listaABM.php' method='post'>
-                        <input type='hidden' name='accion' value='eliminar_lista'>
+                        <input type='hidden' name='accion' value='$accion'>
                         <input type='hidden' name='id_lista' value='$id'>
-                        <button class='confirmar_eliminar' type='submit'>Eliminar</button>
+                        <button class='confirmar_eliminar' type='submit'>$boton</button>
                     </form>
                     <button class='cancelar_eliminar $id'>Cancelar</button>
                 </div>
