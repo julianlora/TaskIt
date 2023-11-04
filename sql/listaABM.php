@@ -26,11 +26,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 echo "Error al insertar el registro: " . mysqli_error($conexion);
             }
 
+            $id_lista = mysqli_insert_id($conexion);
+
             if($etiqueta != 'ninguna'){
                 $sql = "
                 UPDATE listas
                 SET etiqueta = '$etiqueta'
-                WHERE titulo='$titulo' AND id_usuario = '$id_usuario';";
+                WHERE id='$id_lista';";
                 if (mysqli_query($conexion, $sql)) {
                     echo "Etiqueta actualizada con éxito.";
                 } else {
@@ -42,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $sql = "
                 UPDATE listas
                 SET fecha_finalizacion = '$fecha'
-                WHERE titulo='$titulo' AND id_usuario = '$id_usuario';";
+                WHERE id='$id_lista';";
                 if (mysqli_query($conexion, $sql)) {
                     echo "Etiqueta actualizada con éxito.";
                 } else {
@@ -101,17 +103,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $id_admin = $_SESSION['id'];
             $rol = $_POST['rol'];
 
-            // Si no existe, crear relacion del dueño
-            $resultado = mysqli_num_rows(mysqli_query($conexion, "SELECT * from listas_compartidas WHERE id_usuario = '$id_admin' and id_lista = '$id_lista'"));
-            if ($resultado == 0){
-                $sql = "INSERT INTO listas_compartidas (id_usuario, rol, id_lista) VALUES ('$id_admin', 'administrador', '$id_lista')";
-                if (mysqli_query($conexion, $sql)) {
-                    echo "Lista compartida con éxito.";
-                } else {
-                    echo "Error al compartir lista: " . mysqli_error($conexion);
-                }
-            }
-
             // Buscar usuario a compartir
             $usuario_compartido = $_POST['usuario'];
             $sql = "SELECT * FROM usuarios WHERE usuario='$usuario_compartido' and usuario != '$usuario';";
@@ -125,6 +116,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $sql = "SELECT * FROM listas_compartidas WHERE id_usuario = '$id_usuario_compartido' and id_lista = '$id_lista'";
                 $resultado = mysqli_query($conexion, $sql);
                 if (mysqli_num_rows($resultado) == 0){
+                    // Si no existe, crear relacion del dueño
+                    $resultado = mysqli_num_rows(mysqli_query($conexion, "SELECT * from listas_compartidas WHERE id_usuario = '$id_admin' and id_lista = '$id_lista'"));
+                    if ($resultado == 0){
+                        $sql = "INSERT INTO listas_compartidas (id_usuario, rol, id_lista) VALUES ('$id_admin', 'administrador', '$id_lista')";
+                        if (mysqli_query($conexion, $sql)) {
+                            echo "Lista compartida con éxito.";
+                        } else {
+                            echo "Error al compartir lista: " . mysqli_error($conexion);
+                        }
+                    }
                     // Crear relacion
                     $sql = "INSERT INTO listas_compartidas (id_usuario, rol, id_lista) VALUES ('$id_usuario_compartido', '$rol', '$id_lista')";
                     if (mysqli_query($conexion, $sql)) {
@@ -207,8 +208,66 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             mysqli_close($conexion);
             break;
 
+        case 'esconder_terminadas':
+
+            $id_lista = $_POST['id_lista'];
+            $sql = "UPDATE listas SET esconder_terminadas=true WHERE id='$id_lista'";
+            if (mysqli_query($conexion, $sql)) {
+                echo "Lista actualizada con éxito.";
+            } else {
+                echo "Error al actualizar la lista: " . mysqli_error($conexion);
+            }
+
+            header("Location: ../index.php");
+            mysqli_close($conexion);
+            break;
+
+        case 'mostrar_terminadas':
+
+            $id_lista = $_POST['id_lista'];
+            $sql = "UPDATE listas SET esconder_terminadas=false WHERE id='$id_lista'";
+            if (mysqli_query($conexion, $sql)) {
+                echo "Lista actualizada con éxito.";
+            } else {
+                echo "Error al actualizar la lista: " . mysqli_error($conexion);
+            }
+
+            header("Location: ../index.php");
+            mysqli_close($conexion);
+            break;
+        
+        case "modificar_etiqueta":
+            $id_lista = $_POST['id_lista'];
+            $etiqueta = $_POST['etiqueta'];
+
+            $sql = "UPDATE listas SET etiqueta = '$etiqueta' WHERE id='$id_lista'";
+            if (mysqli_query($conexion, $sql)) {
+                echo "Etiqueta actualizada con éxito.";
+            } else {
+                echo "Error al actualizar la etiqueta: " . mysqli_error($conexion);
+            }
+
+            header("Location: ../index.php");
+            mysqli_close($conexion);
+            break;
+
+        case "minimizar":
+            $id_lista = $_POST['id_lista'];
+            $minimizada = $_POST['minimizada'];
+
+            $sql = "UPDATE listas SET minimizada = '$minimizada' WHERE id='$id_lista'";
+            if (mysqli_query($conexion, $sql)) {
+                echo "Lista minimizada con éxito.";
+            } else {
+                echo "Error al actualizar la etiqueta: " . mysqli_error($conexion);
+            }
+
+            header("Location: ../index.php");
+            mysqli_close($conexion);
+            break;
+
         default:
-            echo "No existe accion con ese nombre";
+            echo "No existe la accion $accion";
             break;
     }
 } else {

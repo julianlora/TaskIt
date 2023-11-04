@@ -1,6 +1,6 @@
 <?php
 session_start();
 $_SESSION['ventana'] = 'listas';
-$_SESSION['etiqueta'] = 'todas';
+$_SESSION['etiqueta'] = '';
 header("Location: index.php");
 ?>

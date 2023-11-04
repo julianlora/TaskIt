@@ -188,8 +188,10 @@ main{
 }
 
 .top-menu{
+    position: absolute;
     display: flex;
     justify-content: space-between;
+    width: 100%;
 }
 
 .drag{
@@ -255,6 +257,7 @@ main{
 }
 
 .cabecera-lista{
+    margin-top: 35px;
     padding-left: 5%;
     padding-right: 5%;
 }
@@ -323,6 +326,27 @@ meter{
     padding: 0;
     border: none;
 }
+
+.ventana-etiqueta{
+    display: none;
+    background-color: rgba(0, 0, 0, 0.6);
+    width: 99%;
+    height: 99%;
+    z-index: 100;
+    position:absolute;
+}
+
+.modificar-etiqueta{
+    display: flex;
+    flex-direction: column;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    background-color: gray;
+    z-index: 100;
+}
+
 
 .starimg{
     position: absolute;
@@ -400,6 +424,10 @@ ul{
     justify-content: center;
 }
 
+.minimizada{
+    display: none;
+}
+
 /* ITEM */
 
 .cabecera-item{
@@ -431,6 +459,14 @@ ul{
 
 .checkbox img{
     max-height: 20px;
+}
+
+.item-texto{
+    display: none;
+}
+
+.edicion-texto{
+    display: none;
 }
 
 .item-menu{

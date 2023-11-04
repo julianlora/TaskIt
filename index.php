@@ -24,7 +24,7 @@
     <header class="barra">
         <nav>
             <!-- Contenido de la barra de navegación, como logotipo, menús, etc. -->
-            <a href='index.php'><img class='logo' src="imagenes/Taskit2.png"></a>
+            <a href="to_listas.php"><img class='logo' src="imagenes/Taskit2.png"></a>
             <form class='buscador' method="post">
                 <label>Buscar
                 <input type='hidden' name='accion' value='buscar'>

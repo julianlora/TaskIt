@@ -159,6 +159,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header("Location: ../index.php");
             break;
 
+        case "editar_texto":
+            $nuevoTexto = $_POST['nuevo_texto'];
+            $id_item = $_POST['id_item'];
+
+            $sql = "UPDATE items SET texto='$nuevoTexto' WHERE id = '$id_item' and texto!='$nuevoTexto'";
+            if (mysqli_query($conexion, $sql)) {
+                echo "Item actualizado con éxito.";
+            } else {
+                echo "Error al actualizar el item: " . mysqli_error($conexion);
+            }
+
+            mysqli_close($conexion);
+            header("Location: ../index.php");
+            break;
+
         default:
             echo "No existe accion con ese nombre";
             break;

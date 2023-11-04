@@ -8,35 +8,47 @@ class ItemController {
         $this->conexion = $conexion;
     }
 
-    public function cargarItemsDeLista($id_lista, $nivel, $rol){
+    public function cargarItemsDeLista($id_lista, $nivel, $rol, $esconder){
 
-        $resultado = mysqli_query($this->conexion, "
-        SELECT * from items
-        WHERE id_lista = '$id_lista' and nivel = 0
+        if($esconder){
+            $condicion = 'and checked != true';
+        } else {
+            $condicion = '';
+        }
+
+        $resultado = mysqli_query($this->conexion, 
+        "SELECT * from items
+        WHERE id_lista = '$id_lista' and nivel = 0 $condicion
         ");
         while($item = mysqli_fetch_array($resultado)){
             $this->items[] = $item;
-            $this->mostrarItemEnPantalla($item, $rol);
+            $this->mostrarItemEnPantalla($item, $rol, $esconder);
         }
         // mysqli_close($this->conexion);
         
     }
 
-    public function cargarSubItemsDeLista($id_item_padre, $nivel, $id_lista, $rol){
+    public function cargarSubItemsDeLista($id_item_padre, $nivel, $id_lista, $rol, $esconder){
 
-        $resultado = mysqli_query($this->conexion, "
-        SELECT * from items
-        WHERE id_lista = '$id_lista' and nivel = $nivel and id_item_padre = '$id_item_padre' 
+        if($esconder){
+            $condicion = 'and checked != true';
+        } else {
+            $condicion = '';
+        }
+
+        $resultado = mysqli_query($this->conexion, 
+        "SELECT * from items
+        WHERE id_lista = '$id_lista' and nivel = $nivel and id_item_padre = '$id_item_padre' $condicion
         ");
         while($item = mysqli_fetch_array($resultado)){
             $this->items[] = $item;
-            $this->mostrarItemEnPantalla($item, $rol);
+            $this->mostrarItemEnPantalla($item, $rol, $esconder);
         }
         // mysqli_close($this->conexion);
         
     }
 
-    public function mostrarItemEnPantalla($item, $rol){
+    public function mostrarItemEnPantalla($item, $rol, $esconder){
 
         $texto = $item['texto'];
         $id_item = $item['id'];
@@ -63,6 +75,7 @@ class ItemController {
             $clase = 'checked';
             $img_path = '../TaskIt/imagenes/checked.png';
         }
+        // Checkbox
         if ($rol != 'lector'){
             echo "
                         <form action='sql/itemABM.php' method='post'>
@@ -75,7 +88,19 @@ class ItemController {
         } else {
             echo"       <span class='checkbox'><img class='$clase' src='$img_path'></span>";
         }
-        echo"           <p class='item-texto'>$texto</p>";
+        // Texto del item
+        echo"           <p class='item-texto e$id_item show'>$texto</p>";
+        // Edición escondida
+        echo"           <div class='edicion-texto e$id_item'>
+                        <form class='editar-texto e$id_item' action='sql/itemABM.php' method='post'>
+                            <input type='hidden' name='accion' value='editar_texto'>
+                            <input type='hidden' name='id_item' value='$id_item'>
+                            <input type='text' name='nuevo_texto' value='$texto' required>
+                            <button type='submit'>Confirmar</button>
+                        </form>
+                        <button class='cancelar-editar e$id_item'>x</button>
+                        </div>";
+        // Menu del item
         if($rol!='lector'){
             echo"
                         <span class='item-menu m$id_item'>
@@ -93,15 +118,13 @@ class ItemController {
                     ";
                     $this->insertarFormularioCrearSubitem($id_item, $nivel);
         }
-        
-
         // SUBITEMS DEL ITEM
         if($tipo == 'sublista'){
             echo "
                     <ul>
                     ";
                     $proximo_nivel = $nivel + 1;
-                    $this->cargarSubItemsDeLista($id_item, $proximo_nivel, $id_lista, $rol);
+                    $this->cargarSubItemsDeLista($id_item, $proximo_nivel, $id_lista, $rol, $esconder);
                     echo "
                     </ul>
             ";

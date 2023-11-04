@@ -24,15 +24,20 @@ window.addEventListener('click', function(event) {
                 case 'compartir':
                     id_lista = clases[3]
                     document.getElementById(`ventana_compartir-${id_lista}`).classList.add("ventana_compartir-activo")
+                    document.getElementById(`opciones-${id_lista}`).classList.toggle("show");
                     break
-                case'agregar_miembro':
+                case'editar_miembros':
                     id_lista = clases[1]
                     document.getElementById(`ventana_compartir-${id_lista}`).classList.add("ventana_compartir-activo")
                     break
                 case'terminar_compartir':
                     id_lista = clases[1]
                     document.getElementById(`ventana_compartir-${id_lista}`).classList.remove("ventana_compartir-activo")
-                    window.location.href = "to_terminar_compartir.php";
+                    var xhr = new XMLHttpRequest();
+                    var url = "to_terminar_compartir.php";
+                    xhr.open("POST", url, true);
+                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    xhr.send(); 
                     break
                 case'share-img':
                     document.getElementById(`miembros-${clases[1]}`).classList.toggle("show");
@@ -53,10 +58,52 @@ window.addEventListener('click', function(event) {
                 case 'profile-img':
                     document.querySelector(`.panel`).classList.toggle("show");
                     break
+                case 'item-texto':
+                case 'cancelar-editar':
+                    id_item = clases[1]
+                    document.querySelector(`.item-texto.${id_item}`).classList.toggle("show");
+                    document.querySelector(`.edicion-texto.${id_item}`).classList.toggle("show");
+                    break
+                case 'modificar-etiqueta-btn':
+                    id_item = clases[1]
+                    document.querySelector(`.ventana-etiqueta.l${id_item}`).classList.toggle("show");
+                    document.getElementById(`opciones-${id_item}`).classList.toggle("show");
+                    break
+                case 'cancelar-modificar-etiqueta':
+                    id_item = clases[1]
+                    document.querySelector(`.ventana-etiqueta.l${id_item}`).classList.toggle("show");
+                    break
             }
         }
     }
 });
+
+// Retraer lista
+document.querySelectorAll('.minimizar-btn').forEach(retractBtn => {
+    retractBtn.addEventListener('click', () => {
+        const clases = retractBtn.classList
+        const id_lista = clases[1]
+        const mainList = document.querySelector(`.mainlist.m${id_lista}`)
+        let minimizada = true
+        if (mainList.classList[2] == 'minimizada'){
+            mainList.classList.remove('minimizada')
+            minimizada = 0
+        } else {
+            mainList.classList.add('minimizada')
+            minimizada = 1
+        }
+        // Modificar base de datos
+        var xhr = new XMLHttpRequest();
+        var url = "sql/listaABM.php"; // Ruta a tu script PHP
+
+        // Configurar la solicitud POST (puedes usar GET o POST según tus necesidades)
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        // Enviar la solicitud AJAX
+        xhr.send(`accion=minimizar&minimizada=${minimizada}&id_lista=${id_lista}`); 
+    })
+})
 
 // VISIBILIDAD DE MENU DE ITEMS
 const items = document.querySelectorAll('.cabecera-item')

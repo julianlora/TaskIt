@@ -81,7 +81,7 @@ class ListaController {
             <input type='text' name='titulo' required>
             <label for='etiqueta'>Etiqueta</label>
             <select name='etiqueta'>
-                <option value='ninguna' selected>Ninguna</option>
+                <option value='' selected>--Sin etiqueta--</option>
             ";
             $controladoretiqueta = new EtiquetaController($this->conexion);
             $etiquetas = $controladoretiqueta->obtenerEtiquetas();
@@ -108,12 +108,13 @@ class ListaController {
             $busqueda = $_POST['busqueda'];
             echo "Resultados de búsqueda por '$busqueda':";
         }
-        if($etiqueta != 'todas'){
+        if($etiqueta != ''){
             echo "<h1>$etiqueta</h1>";
         }
         echo "<div class='ventanaprincipal listas'>";
         foreach($this->listas as $lista){
             $id = $lista['id'];
+            $esconder = $lista['esconder_terminadas'];
 
             // Buscar rol del usuario en la lista
             if($lista['acceso'] == 'compartido'){
@@ -124,7 +125,7 @@ class ListaController {
                 $rol = 'administrador';
             }
             // Filtrar por etiqueta y por acceso
-            if (($etiqueta == $lista['etiqueta'] || $etiqueta == 'todas') && (($_SESSION['ventana'] == 'listas compartidas' && $lista['acceso'] == 'compartido') || $_SESSION['ventana'] != 'listas compartidas')){
+            if (($etiqueta == $lista['etiqueta'] || $etiqueta == '') && (($_SESSION['ventana'] == 'listas compartidas' && $lista['acceso'] == 'compartido') || $_SESSION['ventana'] != 'listas compartidas')){
                 $titulo = $lista['titulo'];
                 echo "
                 <article id='$id' class='lista draggable'>
@@ -136,17 +137,19 @@ class ListaController {
                     $this->insertarIconoMiembros($id);
                 }
                 // Si tiene etiqueta agregar rotulo
-                if ($etiqueta == 'todas' && $lista['etiqueta'] != ''){
+                if ($etiqueta == '' && $lista['etiqueta'] != ''){
                     $this->insertarRotulo($lista['etiqueta']);
                 }
+                // MENU DE OPCIONES
                 echo"
                             <div class='listmenu'>
                                 <div class='dropdown'>
                                     <img class='opcionesbtn $id' src='imagenes/three-dots.png'>
-                                    <div id='opciones-$id' class='dropdown-content'>
-                                        <button class='paper-btn show'>Esconder tareas terminadas</button>
-                                        <button class='paper-btn show'>Esconder barra de progreso</button>
-                                        <button class='paper-btn show'>Definir etiqueta</button>";
+                                    <div id='opciones-$id' class='dropdown-content'>";
+                                    $this->insertarOpcionEsconderTerminadas($lista);
+                echo"    
+                                        <button class='paper-btn show'>Esconder barra de progreso</button>";
+                                        $this->insertarOpcionModificarEtiqueta($lista);
                                         // Funcionalidades exclusivas de administrador
                                         if($rol == 'administrador'){
                                             echo"<button class='paper-btn show'>Modificar fecha de finalización</button>";
@@ -158,20 +161,31 @@ class ListaController {
                 echo"
                                     </div>
                                 </div>
-                            </div>";
-                if ($rol == 'administrador'){$this->insertarVentanaCompartir($lista);}
-                echo"
+                            </div>
                         </div>
-                    </div>
+                    </div>";
+                // Ventanas de confirmacion
+                $this->insertarVentanaModificarEtiqueta($lista);
+                if ($rol == 'administrador'){$this->insertarVentanaCompartir($lista);}
+                // TITULO
+                echo"
                     <div class='cabecera-lista'>
                         <h1 class='titulo'>
                             $titulo";
                             $this->insertarBarraDeProgreso($id);
+                // ITEMS
                 echo"
                         </h1>
-                    </div>
-                    <ul class='mainlist'>";
-                    $item_controlador->cargarItemsDeLista($id, 0, $rol);
+                    </div>";
+                if($lista['minimizada']){
+                    $clase = 'minimizada';
+                } else {
+                    $clase = '';
+                }
+                echo"
+                    <ul class='mainlist m$id $clase'>";
+                    $item_controlador->cargarItemsDeLista($id, 0, $rol, $esconder);
+                // MENU INFERIOR
                 echo "
                     </ul>
                     <div class='bottom-menu'>";
@@ -185,7 +199,7 @@ class ListaController {
                 }
                 echo"
                         <div class='retract-btn'>
-                            <button class='retractlistbtn'>^</button>
+                            <button class='minimizar-btn $id'>^</button>
                         </div>
                     </div>
                 </article>";
@@ -233,7 +247,7 @@ class ListaController {
         // Agregar miembros solo dueños
         if ($flag){
             echo"
-            <button class='agregar_miembro $id'>Agregar miembros</button>
+            <button class='editar_miembros $id'>Editar miembros</button>
             </ul>";
         } else {
             echo"</ul>";
@@ -259,6 +273,71 @@ class ListaController {
         
     }
 
+    public function insertarOpcionEsconderTerminadas($lista){
+
+        $id = $lista['id']; 
+        if($lista['esconder_terminadas']){
+            $accion = 'mostrar_terminadas';
+            $boton = 'Mostrar tareas terminadas';
+        } else {
+            $accion = 'esconder_terminadas';
+            $boton = 'Esconder tareas terminadas';
+        }
+
+        echo"
+        <form action='sql/listaABM.php' method='post'>
+            <input type='hidden' name='accion' value='$accion'>
+            <input type='hidden' name='id_lista' value='$id'>
+            <button class='paper-btn show' type='submit'>$boton</button>
+        </form>";
+    }
+
+    public function insertarOpcionModificarEtiqueta($lista){
+        $id = $lista['id'];
+        if($lista['etiqueta'] == ''){
+            $boton = 'Asignar etiqueta';
+        } else {
+            $boton = 'Modificar etiqueta';
+        }
+        
+        echo"
+        <button class='modificar-etiqueta-btn $id paper-btn show'>$boton</button>";
+    }
+
+    public function insertarVentanaModificarEtiqueta($lista){
+        $id = $lista['id'];
+        $etiquetaActual = $lista['etiqueta'];
+        echo"
+        <div class='ventana-etiqueta l$id'>
+            <form class='modificar-etiqueta' action='sql/listaABM.php' method='post'>
+                <label for='etiqueta'>Etiqueta</label>
+                <select name='etiqueta'>
+                    <option value=''>--sin etiqueta--</option>
+        ";
+        $controladoretiqueta = new EtiquetaController($this->conexion);
+        $etiquetas = $controladoretiqueta->obtenerEtiquetas();
+        foreach($etiquetas as $etiqueta){
+            $texto = $etiqueta['texto'];
+            if ($texto == $etiquetaActual){
+                echo"
+                    <option value='$texto' selected>$texto</option>
+                ";
+            } else {
+                echo"
+                    <option value='$texto'>$texto</option>
+                ";
+            }
+        }
+        echo"
+                </select><br>
+                <input type='hidden' name='id_lista' value='$id'>
+                <input type='hidden' name='accion' value='modificar_etiqueta'>
+                <button class='paper-btn show' type='submit'>Confirmar</button>
+            </form>
+            <button class='cancelar-modificar-etiqueta $id'>Cancelar</button>
+        </div>";
+    }
+
     public function insertarVentanaCompartir($lista){
         $id = $lista['id'];
         $titulo = $lista['titulo'];
@@ -272,7 +351,40 @@ class ListaController {
         echo"
         <div id='ventana_compartir-$id' class='$clase'>
             <div class='confirmacion-contenido'>
-                <h2>Compartir '$titulo'</h2>";
+                <h2>Compartir '$titulo'</h2>
+                <ul class='listado-miembros'>";
+        
+        $id_usuario = $_SESSION['id'];
+        // Buscar administradores
+        $admins = mysqli_query($this->conexion, "SELECT usuario FROM usuarios WHERE usuarios.id IN (SELECT id_usuario from listas_compartidas WHERE listas_compartidas.id_lista = '$id' and rol = 'administrador') ORDER BY usuario;");
+        $cantAdmins = mysqli_num_rows($admins);
+        // Buscar colaboradores
+        $colaboradores = mysqli_query($this->conexion, "SELECT usuario FROM usuarios WHERE usuarios.id IN (SELECT id_usuario from listas_compartidas WHERE listas_compartidas.id_lista = '$id' and rol = 'colaborador') ORDER BY usuario;");
+        $cantColaboradores = mysqli_num_rows($colaboradores);
+        // Buscar lectores
+        $lectores = mysqli_query($this->conexion, "SELECT usuario FROM usuarios WHERE usuarios.id IN (SELECT id_usuario from listas_compartidas WHERE listas_compartidas.id_lista = '$id' and rol = 'lector') ORDER BY usuario;");
+        $cantLectores = mysqli_num_rows($lectores);
+        // Ventana de miembros
+        echo"
+            <li class='owners'><b>Administradores ($cantAdmins):</b></li>";
+            while($admin = mysqli_fetch_array($admins)){
+                $admin = $admin[0];
+                echo "<li class='miembro'>$admin</li>";
+            }
+            echo"<li class='colaboradores'><b>Colaboradores ($cantColaboradores):</b></li>";
+            while($colaborador = mysqli_fetch_array($colaboradores)){
+                $colaborador = $colaborador[0];
+                echo "<li class='colaborador'>$colaborador</li>";
+            }
+            echo"<li class='lectores'><b>Lectores ($cantLectores):</b></li>";
+            while($lector = mysqli_fetch_array($lectores)){
+                $lector = $lector[0];
+                echo "<li class='lector'>$lector</li>";
+            }
+
+        echo"
+                </ul>
+                ";
         // Feedback resultado de operacion
         if(isset($_SESSION['resultado'])){
             switch($_SESSION['resultado']){

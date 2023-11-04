@@ -27,7 +27,7 @@ if($resultado!=0){
 	$_SESSION['usuario']=$respuesta['usuario'];
 	$_SESSION['id']=$respuesta['id'];
 	$_SESSION['ventana']='listas';
-	$_SESSION['etiqueta']='todas';
+	$_SESSION['etiqueta']='';
 	$_SESSION['accion'] = 'none';
 		
 	// 	echo "Hola ".$_SESSION['nombre']." ".$_SESSION['apellido']."<br />";
