@@ -73,6 +73,10 @@ window.addEventListener('click', function(event) {
                     id_item = clases[1]
                     document.querySelector(`.ventana-etiqueta.l${id_item}`).classList.toggle("show");
                     break
+                case 'editar-miembro':
+                    id_item = clases[1]
+                    document.querySelector(`.opciones-miembro.o${id_item}`).classList.toggle("show");
+                    break
             }
         }
     }

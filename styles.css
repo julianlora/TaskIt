@@ -387,6 +387,16 @@ meter{
     color: black;
 }
 
+.miembro{
+    display: flex;
+    justify-content: space-between;
+}
+
+.opciones-miembro{
+    display: none;
+    position: absolute;
+}
+
 .confirmacion-botones{
     display: flex;
     justify-content: center;

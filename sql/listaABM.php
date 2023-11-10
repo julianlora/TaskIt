@@ -1,6 +1,8 @@
 <?php
 session_start();
 require("../connect.php");
+include("../controlador/NotificacionController.php");
+$controladornotificacion = new NotificacionController($conexion);
 
 // Verificar si se ha enviado el formulario
 
@@ -144,7 +146,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     // Notificar usuario agregado
                     $resultado = mysqli_fetch_array(mysqli_query($conexion, "SELECT titulo from listas WHERE id = '$id_lista'"));
                     $titulo = $resultado['titulo'];
-                    $_SESSION['notificar'] = true;
                     $notificaciones = array(
                         array('destinatario' => $id_usuario_compartido, 'mensaje'=> "$usuario te ha unido a la lista $titulo como $rol."
                     ));
@@ -161,8 +162,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         ));
                     }
 
-                    $_SESSION['notificaciones'] = $notificaciones;
-                    header("Location: notificacionABM.php");
+                    // Enviar notificaciones
+                    $controladornotificacion->enviarNotificaciones($notificaciones);
                 } else {
                     $_SESSION['resultado'] = 'relacion existente';
                     mysqli_close($conexion);
@@ -201,9 +202,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 ));
             }
 
-            $_SESSION['notificar'] = true;
-            $_SESSION['notificaciones'] = $notificaciones;
-            header("Location: notificacionABM.php");
+            // Enviar notificaciones
+            $controladornotificacion->enviarNotificaciones($notificaciones);
 
             mysqli_close($conexion);
             break;
@@ -265,6 +265,71 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header("Location: ../index.php");
             mysqli_close($conexion);
             break;
+
+        case 'modificar_acceso':
+            $id_lista = $_POST['id_lista'];
+            $id_miembro = $_POST['id_miembro'];
+            $rol = $_POST['rol'];
+            $_SESSION['accion'] = 'compartir';
+            $_SESSION['id_lista'] = $id_lista;
+            $usuario = $_SESSION['usuario'];
+            $id_admin = $_SESSION['id'];
+
+            $sql = "UPDATE listas_compartidas SET rol = '$rol' WHERE id_lista='$id_lista' and id_usuario='$id_miembro'";
+            if (mysqli_query($conexion, $sql)) {
+                echo "Miembro actualizado con éxito.";
+            } else {
+                echo "Error al actualizar el miembro: " . mysqli_error($conexion);
+            }
+
+            // Notificar usuario modificado
+            $resultado = mysqli_fetch_array(mysqli_query($conexion, "SELECT * from listas WHERE id = '$id_lista'"));
+            $titulo = $resultado['titulo'];
+            $notificaciones = array(
+                array('destinatario' => $id_miembro, 'mensaje'=> "$usuario te ha convertido en $rol de la lista $titulo."
+            ));
+
+            // Buscar usuario a compartir
+            $sql = "SELECT * FROM usuarios WHERE id='$id_miembro'";
+            $resultado = mysqli_fetch_array(mysqli_query($conexion, $sql));
+            $nombre_usuario_modificado = $resultado['usuario'];
+
+            // Notificar miembros de la lista excepto admin que comparte y usuario compartido
+            $sql = "SELECT id FROM usuarios WHERE id IN (
+                SELECT id_usuario FROM listas_compartidas
+                WHERE id_lista = '$id_lista' and id_usuario != '$id_miembro' and id_usuario != '$id_admin'
+            )";
+            $resultado = mysqli_query($conexion, $sql);
+            while($miembro = mysqli_fetch_array($resultado)){
+                array_push($notificaciones, array(
+                    'destinatario'=> $miembro['id'],
+                    'mensaje'=> "$nombre_usuario_modificado se ha convertido en $rol de la lista $titulo."
+                ));
+            }
+
+            // Enviar notificaciones
+            $controladornotificacion->enviarNotificaciones($notificaciones);
+
+            mysqli_close($conexion);
+            break;
+        
+        case 'quitar_acceso':
+            $id_lista = $_POST['id_lista'];
+            $id_miembro = $_POST['id_miembro'];
+            $_SESSION['accion'] = 'compartir';
+            $_SESSION['id_lista'] = $id_lista;
+
+            $sql = "DELETE FROM listas_compartidas WHERE id_lista = '$id_lista' and id_usuario = '$id_miembro';";
+            if (mysqli_query($conexion, $sql)) {
+                echo "Relación eliminada con éxito.";
+            } else {
+                echo "Error al eliminar la relación: " . mysqli_error($conexion);
+            }
+
+            header("Location: ../index.php");
+            mysqli_close($conexion);
+            break;
+
 
         default:
             echo "No existe la accion $accion";

@@ -39,5 +39,11 @@ class NotificacionController {
             </div>";
         }
     }
+
+    public function enviarNotificaciones($notificaciones){
+        $_SESSION['notificar'] = true;
+        $_SESSION['notificaciones'] = $notificaciones;
+        header("Location: notificacionABM.php");
+    }
 }
 ?>

@@ -356,30 +356,112 @@ class ListaController {
         
         $id_usuario = $_SESSION['id'];
         // Buscar administradores
-        $admins = mysqli_query($this->conexion, "SELECT usuario FROM usuarios WHERE usuarios.id IN (SELECT id_usuario from listas_compartidas WHERE listas_compartidas.id_lista = '$id' and rol = 'administrador') ORDER BY usuario;");
+        $admins = mysqli_query($this->conexion, "SELECT * FROM usuarios WHERE usuarios.id IN (SELECT id_usuario from listas_compartidas WHERE listas_compartidas.id_lista = '$id' and rol = 'administrador') ORDER BY usuario;");
         $cantAdmins = mysqli_num_rows($admins);
         // Buscar colaboradores
-        $colaboradores = mysqli_query($this->conexion, "SELECT usuario FROM usuarios WHERE usuarios.id IN (SELECT id_usuario from listas_compartidas WHERE listas_compartidas.id_lista = '$id' and rol = 'colaborador') ORDER BY usuario;");
+        $colaboradores = mysqli_query($this->conexion, "SELECT * FROM usuarios WHERE usuarios.id IN (SELECT id_usuario from listas_compartidas WHERE listas_compartidas.id_lista = '$id' and rol = 'colaborador') ORDER BY usuario;");
         $cantColaboradores = mysqli_num_rows($colaboradores);
         // Buscar lectores
-        $lectores = mysqli_query($this->conexion, "SELECT usuario FROM usuarios WHERE usuarios.id IN (SELECT id_usuario from listas_compartidas WHERE listas_compartidas.id_lista = '$id' and rol = 'lector') ORDER BY usuario;");
+        $lectores = mysqli_query($this->conexion, "SELECT * FROM usuarios WHERE usuarios.id IN (SELECT id_usuario from listas_compartidas WHERE listas_compartidas.id_lista = '$id' and rol = 'lector') ORDER BY usuario;");
         $cantLectores = mysqli_num_rows($lectores);
         // Ventana de miembros
         echo"
             <li class='owners'><b>Administradores ($cantAdmins):</b></li>";
             while($admin = mysqli_fetch_array($admins)){
-                $admin = $admin[0];
-                echo "<li class='miembro'>$admin</li>";
+                $admin_usuario = $admin['usuario'];
+                $id_miembro = $admin['id'];
+                echo "<li class='miembro'>$admin_usuario";
+                if($id_miembro != $id_usuario){
+                    echo"
+                        <button class='editar-miembro $id_miembro'>-</button>
+                        <div class='opciones-miembro o$id_miembro'>
+                            <p>Cambiar a</p>
+                            <form action='sql/listaABM.php' method='post'>
+                                <input type='hidden' name='id_miembro' value='$id_miembro'>
+                                <input type='hidden' name='id_lista' value='$id'>
+                                <input type='hidden' name='rol' value='colaborador'>
+                                <input type='hidden' name='accion' value='modificar_acceso'>
+                                <button type='submit'>Colaborador</button>
+                            </form>
+                            <form action='sql/listaABM.php' method='post'>
+                                <input type='hidden' name='id_miembro' value='$id_miembro'>
+                                <input type='hidden' name='id_lista' value='$id'>
+                                <input type='hidden' name='rol' value='lector'>
+                                <input type='hidden' name='accion' value='modificar_acceso'>
+                                <button type='submit'>Lector</button>
+                            </form>
+                            <form action='sql/listaABM.php' method='post'>
+                                <input type='hidden' name='id_miembro' value='$id_miembro'>
+                                <input type='hidden' name='id_lista' value='$id'>
+                                <input type='hidden' name='accion' value='quitar_acceso'>
+                                <button type='submit'>Quitar acceso</button>
+                            </form>
+                        </div>
+                    </li>";
+                }
+                
             }
             echo"<li class='colaboradores'><b>Colaboradores ($cantColaboradores):</b></li>";
             while($colaborador = mysqli_fetch_array($colaboradores)){
-                $colaborador = $colaborador[0];
-                echo "<li class='colaborador'>$colaborador</li>";
+                $colaborador_usuario = $colaborador['usuario'];
+                $id_miembro = $colaborador['id'];
+                echo "<li class='miembro'>$colaborador_usuario
+                        <button class='editar-miembro $id_miembro'>-</button>
+                        <div class='opciones-miembro o$id_miembro'>
+                            <p>Cambiar a</p>
+                            <form action='sql/listaABM.php' method='post'>
+                                <input type='hidden' name='id_miembro' value='$id_miembro'>
+                                <input type='hidden' name='id_lista' value='$id'>
+                                <input type='hidden' name='rol' value='administrador'>
+                                <input type='hidden' name='accion' value='modificar_acceso'>
+                                <button type='submit'>Administrador</button>
+                            </form>
+                            <form action='sql/listaABM.php' method='post'>
+                                <input type='hidden' name='id_miembro' value='$id_miembro'>
+                                <input type='hidden' name='id_lista' value='$id'>
+                                <input type='hidden' name='rol' value='lector'>
+                                <input type='hidden' name='accion' value='modificar_acceso'>
+                                <button type='submit'>Lector</button>
+                            </form>
+                            <form action='sql/listaABM.php' method='post'>
+                                <input type='hidden' name='id_miembro' value='$id_miembro'>
+                                <input type='hidden' name='id_lista' value='$id'>
+                                <input type='hidden' name='accion' value='quitar_acceso'>
+                                <button type='submit'>Quitar acceso</button>
+                            </form>
+                        </div>
+                    </li>";
             }
             echo"<li class='lectores'><b>Lectores ($cantLectores):</b></li>";
             while($lector = mysqli_fetch_array($lectores)){
-                $lector = $lector[0];
-                echo "<li class='lector'>$lector</li>";
+                $lector_usuario = $lector['usuario'];
+                $id_miembro = $lector['id'];
+                echo "<li class='miembro'>$lector_usuario
+                        <button class='editar-miembro $id_miembro'>-</button>
+                        <div class='opciones-miembro o$id_miembro'>
+                            <p>Cambiar a</p>
+                            <form action='sql/listaABM.php' method='post'>
+                                <input type='hidden' name='id_miembro' value='$id_miembro'>
+                                <input type='hidden' name='id_lista' value='$id'>
+                                <input type='hidden' name='rol' value='administrador'>
+                                <input type='hidden' name='accion' value='modificar_acceso'>
+                                <button type='submit'>Administrador</button>
+                            </form>
+                            <form action='sql/listaABM.php' method='post'>
+                                <input type='hidden' name='id_miembro' value='$id_miembro'>
+                                <input type='hidden' name='id_lista' value='$id'>
+                                <input type='hidden' name='rol' value='colaborador'>
+                                <input type='hidden' name='accion' value='modificar_acceso'>
+                                <button type='submit'>Colaborador</button>
+                            </form>
+                            <form action='sql/listaABM.php' method='post'>
+                                <input type='hidden' name='id_miembro' value='$id_miembro'>
+                                <input type='hidden' name='id_lista' value='$id'>
+                                <input type='hidden' name='accion' value='quitar_acceso'>
+                                <button type='submit'>Quitar acceso</button>
+                            </form>
+                        </div>
+                    </li>";
             }
 
         echo"
