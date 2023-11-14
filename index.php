@@ -25,17 +25,25 @@
         <nav>
             <!-- Contenido de la barra de navegación, como logotipo, menús, etc. -->
             <a href="to_listas.php"><img class='logo' src="imagenes/Taskit2.png"></a>
-            <form class='buscador' method="post">
-                <label>Buscar
+
+            <form method="post" class="search-form">
+                <div class="search-bar">
+                    <input type="text" name="busqueda" placeholder="Buscar...">
+                    <button type="submit">
+                    <img src="imagenes/lupa.png" alt="Icono de Búsqueda">
+                    </button>
+                </div>
                 <input type='hidden' name='accion' value='buscar'>
-                <input type="search" name="busqueda" placeholder="Buscar..." />
-                <input type="submit" value="Enviar">
-                </label>
             </form>
             <?php
-            $usuario = $_SESSION['usuario'];
+            $usuario = $_SESSION['nombre'].' '.$_SESSION['apellido'];
             echo "
-            <div class='usuario'>
+            <div class='usuario'>";
+            if ($_SESSION['categoria'] == 'estandar'){
+                echo"
+                <div class='suscripcion-btn'><a href='to_suscribirse.php'>Suscribirse</a></div>";
+            }
+            echo"
                 <div class='notificaciones-btn'>
                     <img class='bell' src='imagenes/bell.png'>";
                     $pendiente = $controladornotificacion->getNotificacionesPendientes();
@@ -54,7 +62,6 @@
                     $controladornotificacion->mostrarNotificaciones();
             echo"
                 </div>
-                <p class='nombre-usuario'>$usuario</p>
                 <img class='profile-img' src='imagenes/profile-circle.png'>
                 <div class='panel'>
                     Hola! $usuario
@@ -65,21 +72,26 @@
         </nav>
     </header>
 
-    <div class="container">
+    <?php
+    if ($_SESSION['ventana'] == 'listas' | $_SESSION['ventana'] == 'listas compartidas' | $_SESSION['ventana'] == 'calendario'){
+        $container = 'display:flex;';
+    } else {
+        $container = 'display:none;';
+    }
+    ?>
+    <div class="container" style=<?php echo $container?>>
         <!-- Barra Lateral Izquierda -->
+        
         <aside class="barralateral">
-            <div style="display:flex;">
-                <a href="to_listas.php"><h2>Mis listas</h2></a>
-                <?php
-                if (!isset($_POST['accion']) || $_POST['accion'] != 'nueva_lista'){
-                    $controladorlista->insertarBotonNuevaLista();
-                }
-                ?>
-            </div>
+            <div class='cover'></div>
+            <a href="to_listas.php"><h2>Mis listas</h2></a>
             <?php
-                if (isset($_POST['accion']) && $_POST['accion'] == 'nueva_lista'){
-                    $controladorlista->insertarFormularioCrearLista();
-                }
+            if (!isset($_POST['accion']) || $_POST['accion'] != 'nueva_lista'){
+                $controladorlista->insertarBotonNuevaLista();
+            }
+            ?>
+            <?php
+                $controladorlista->insertarFormularioCrearLista();
                 $controladoretiqueta->mostrarEtiquetasEnPantalla();
                 if (isset($_POST['accion']) && $_POST['accion'] == 'crear_etiqueta'){
                     $controladoretiqueta->insertarFormularioCrearEtiqueta();
@@ -87,7 +99,7 @@
                     $controladoretiqueta->insertarBotonCrearEtiqueta();
                 }
             ?>
-            <a href='to_listas_compartidas.php'><h2>Listas compartidas</h2></a>
+            <a href='to_listas_compartidas.php'><h2>Compartidas conmigo</h2></a>
             <a href='to_calendario.php'><h2>Calendario</h2></a>
         </aside>
 
@@ -101,7 +113,42 @@
             }
             
         ?>
+    </div>
+
+    <!-- VENTANA SUSCRIPCION -->
+
+    <?php
+    if ($_SESSION['ventana'] == 'suscripcion'){
+        $display = 'display:block;';
+    } else {
+        $display = 'display:none;';
+    }
+    ?>
+
+    <div class='ventana-suscripcion' style='<?php echo $display?>'>
+        <h1>Elige un plan</h1>
+        <p>Sucríbete a TaskIt para compartir tus listas y crear equipos de trabajo más eficientes.</p>
+        <div class="subscription-panel">
             
+            <div class="subscription-card mensual">
+                <h2>Mensual</h2>
+                <p class='precio-mes'><b>$100/mes</b></p>
+                <button class='plan-btn mensual'>Seleccionar</button>
+            </div>
+            <div class="subscription-card anual">
+                <h2>Anual</h2>
+                <p class='precio-mes'><b>$50/mes</b></p>
+                <p>$600 precio total</p>
+                <button class='plan-btn anual'>Seleccionar</button>
+            </div>
+
+        </div>
+        <!-- Insertar boton de pago -->
+        <?php
+        if ($_SESSION['ventana'] == 'suscripcion'){
+            include('mercadopago.php');
+        }
+        ?>
     </div>
 
     <!-- Footer (Opcional) -->

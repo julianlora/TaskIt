@@ -89,29 +89,28 @@ class ItemController {
             echo"       <span class='checkbox'><img class='$clase' src='$img_path'></span>";
         }
         // Texto del item
-        echo"           <p class='item-texto e$id_item show'>$texto</p>";
+        echo"           <p class='item-texto e$id_item'>$texto</p>";
         // Edición escondida
         echo"           <div class='edicion-texto e$id_item'>
                         <form class='editar-texto e$id_item' action='sql/itemABM.php' method='post'>
                             <input type='hidden' name='accion' value='editar_texto'>
                             <input type='hidden' name='id_item' value='$id_item'>
-                            <input type='text' name='nuevo_texto' value='$texto' required>
-                            <button type='submit'>Confirmar</button>
+                            <input class='static' type='text' name='nuevo_texto' value='$texto' required>
+                            <button type='submit'><img class='btn' src='../TaskIt/imagenes/done.png'></button>
                         </form>
-                        <button class='cancelar-editar e$id_item'>x</button>
                         </div>";
         // Menu del item
         if($rol!='lector'){
             echo"
                         <span class='item-menu m$id_item'>
-                            <button class='nuevo-subitem-btn s$id_item'>+</button>
+                            <button><img class='nuevo-subitem-btn s$id_item btn' src='../TaskIt/imagenes/add.png'></button>
                             <form class='eliminar-item' action='sql/itemABM.php' method='post'>
                                 <input type='hidden' name='accion' value='eliminar_item'>
                                 <input type='hidden' name='id_item' value='$id_item'>
                                 <input type='hidden' name='nivel' value='$nivel'>
                                 <input type='hidden' name='id_lista' value='$id_lista'>
                                 <input type='hidden' name='id_item_padre' value='$id_item_padre'>
-                                <button type='submit'>x</button>
+                                <button type='submit'><img class='btn' src='../TaskIt/imagenes/delete.png'></button>
                             </form>
                         </span>
                     </div>
@@ -143,7 +142,7 @@ class ItemController {
                 <input type='hidden' name='accion' value='agregar_subitem'>
                 <input type='hidden' name='id_sublista' value='$id_sublista'>
                 <input type='hidden' name='nivel' value='$nivel'>
-                <input type='text' name='texto' required>
+                <input class='static' type='text' name='texto' required>
                 <button type='submit'>Agregar subitem</button>
             </form>
         ";

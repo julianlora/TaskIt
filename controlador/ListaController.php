@@ -43,7 +43,7 @@ class ListaController {
             WHERE id_usuario = '$id' and (titulo LIKE '%$busqueda%' or (
                 SELECT COUNT(items.id) FROM items
                 WHERE items.id_lista = listas.id and items.texto LIKE '%$busqueda%'
-            ) > 0) 
+            ) > 0) and acceso != 'compartido'
             ORDER BY id DESC");
             while($fila = mysqli_fetch_array($resultado)){
                 $this->listas[] = $fila;
@@ -53,7 +53,7 @@ class ListaController {
             SELECT * from listas
             WHERE id IN (
                 SELECT listas_compartidas.id_lista FROM listas_compartidas
-                WHERE listas_compartidas.id_usuario = '$id' and listas_compartidas.rol != 'administrador'
+                WHERE listas_compartidas.id_usuario = '$id'
             ) and (titulo LIKE '%$busqueda%' or (
                 SELECT COUNT(items.id) FROM items
                 WHERE items.id_lista = listas.id and items.texto LIKE '%$busqueda%'
@@ -66,21 +66,23 @@ class ListaController {
     }
 
     public function insertarBotonNuevaLista(){
+        // echo"
+        // <form method='post'>
+        // <input type='hidden' name='accion' value='nueva_lista'>
+        // <button type='submit'>Nueva lista</button>
+        // </form>";
         echo"
-        <form method='post'>
-        <input type='hidden' name='accion' value='nueva_lista'>
-        <button type='submit'>Nueva lista</button>
-        </form>";
+        <img class='nueva-lista static' src='../TaskIt/imagenes/add.png'>";
     }
 
     public function insertarFormularioCrearLista(){
         $date = date('Y-m-d');
         echo"
-        <form class='animation' action='sql/listaABM.php' method='post'>
+        <form class='crear-lista animation static' action='sql/listaABM.php' method='post'>
             <label for='titulo'>Título</label>
-            <input type='text' name='titulo' required>
+            <input class='static' type='text' name='titulo' required>
             <label for='etiqueta'>Etiqueta</label>
-            <select name='etiqueta'>
+            <select class='static' name='etiqueta'>
                 <option value='' selected>--Sin etiqueta--</option>
             ";
             $controladoretiqueta = new EtiquetaController($this->conexion);
@@ -94,10 +96,10 @@ class ListaController {
             echo"
             </select><br>
             <label for='fecha'>Fecha de finalización:</label>
-            <input type='date' id='fecha' name='fecha' min='$date'>
+            <input class='static' type='date' id='fecha' name='fecha' min='$date'>
 
             <input type='hidden' name='accion' value='crear_lista'>
-            <button type='submit'>Enviar</button>
+            <button type='submit'>Crear</button>
         </form>";
     }
 
@@ -106,7 +108,7 @@ class ListaController {
         echo "<main>";
         if (isset($_POST['accion']) && $_POST['accion'] == 'buscar'){ // Si se realizó una búsqueda
             $busqueda = $_POST['busqueda'];
-            echo "Resultados de búsqueda por '$busqueda':";
+            echo "<p class='busqueda-aclariacion'>Resultados de búsqueda por '$busqueda':</P>";
         }
         if($etiqueta != ''){
             echo "<h1>$etiqueta</h1>";
@@ -115,26 +117,29 @@ class ListaController {
         foreach($this->listas as $lista){
             $id = $lista['id'];
             $esconder = $lista['esconder_terminadas'];
+            $id_usuario = $_SESSION['id'];
+            $propietarioId = $lista['id_usuario']; 
 
             // Buscar rol del usuario en la lista
             if($lista['acceso'] == 'compartido'){
-                $id_usuario = $_SESSION['id'];
                 $resultado = mysqli_fetch_array(mysqli_query($this->conexion, "SELECT * from listas_compartidas WHERE id_usuario = '$id_usuario' and id_lista = '$id'"));
                 $rol = $resultado['rol'];
             } else {
                 $rol = 'administrador';
             }
             // Filtrar por etiqueta y por acceso
-            if (($etiqueta == $lista['etiqueta'] || $etiqueta == '') && (($_SESSION['ventana'] == 'listas compartidas' && $lista['acceso'] == 'compartido') || $_SESSION['ventana'] != 'listas compartidas')){
+            if (($etiqueta == $lista['etiqueta'] || $etiqueta == '') && (($_SESSION['ventana'] == 'listas compartidas' && $lista['acceso'] == 'compartido' && $propietarioId != $id_usuario) || ($_SESSION['ventana'] == 'listas' && $propietarioId == $id_usuario))){
                 $titulo = $lista['titulo'];
                 echo "
                 <article id='$id' class='lista draggable'>
+                    <div class='cover-lista'></div>
+                    <div class='cover-lista-2'></div>
                     <div class='top-menu'>
                         <div class='drag $id'><img src='../TaskIt/imagenes/drag.png' draggable='false'></div>
                             <div class='top-right-menu'>";
                 // Si la lista es compartida insertar icono
                 if ($lista['acceso'] == 'compartido'){
-                    $this->insertarIconoMiembros($id);
+                    $this->insertarIconoMiembros($id, $propietarioId);
                 }
                 // Si tiene etiqueta agregar rotulo
                 if ($etiqueta == '' && $lista['etiqueta'] != ''){
@@ -144,20 +149,23 @@ class ListaController {
                 echo"
                             <div class='listmenu'>
                                 <div class='dropdown'>
-                                    <img class='opcionesbtn $id' src='imagenes/three-dots.png'>
+                                    <img class='opcionesbtn $id btn' src='imagenes/three-dots.png'>
                                     <div id='opciones-$id' class='dropdown-content'>";
                                     $this->insertarOpcionEsconderTerminadas($lista);
-                echo"    
-                                        <button class='paper-btn show'>Esconder barra de progreso</button>";
-                                        $this->insertarOpcionModificarEtiqueta($lista);
-                                        // Funcionalidades exclusivas de administrador
-                                        if($rol == 'administrador'){
-                                            echo"<button class='paper-btn show'>Modificar fecha de finalización</button>";
-                                            echo"
-                                            <img class='starimg' src='../TaskIt/imagenes/star.png'>
-                                            <button id='mostrarVentana-$id' class='paper-btn opcionbtn compartir $id show'>Compartir</button>";
+                                    $this->insertarOpcionModificarEtiqueta($lista);
+                                    // Funcionalidades exclusivas de administrador
+                                    if($rol == 'administrador'){
+                                        echo"<button class='paper-btn show'>Modificar fecha de finalización</button>";
+                                        if($_SESSION['categoria'] == 'suscriptor'){
+                                            $clase = '';
+                                        } else {
+                                            $clase = 'disabled';
                                         }
-                                        $this->insertarOpcionEliminarOAbandonar($lista, $rol);
+                                        echo"
+                                        <img class='starimg' src='../TaskIt/imagenes/star.png'>
+                                        <button id='mostrarVentana-$id' class='paper-btn opcionbtn compartir $id show $clase'>Compartir</button>";
+                                    }
+                                    $this->insertarOpcionEliminarOAbandonar($lista, $rol, $propietarioId);
                 echo"
                                     </div>
                                 </div>
@@ -166,21 +174,23 @@ class ListaController {
                     </div>";
                 // Ventanas de confirmacion
                 $this->insertarVentanaModificarEtiqueta($lista);
-                if ($rol == 'administrador'){$this->insertarVentanaCompartir($lista);}
+                
                 // TITULO
                 echo"
                     <div class='cabecera-lista'>
                         <h1 class='titulo'>
                             $titulo";
-                            $this->insertarBarraDeProgreso($id);
+                            // $this->insertarBarraDeProgreso($id);
                 // ITEMS
                 echo"
                         </h1>
                     </div>";
                 if($lista['minimizada']){
                     $clase = 'minimizada';
+                    $imagen = 'maximizar.png';
                 } else {
                     $clase = '';
+                    $imagen = 'minimizar.png';
                 }
                 echo"
                     <ul class='mainlist m$id $clase'>";
@@ -190,7 +200,7 @@ class ListaController {
                     </ul>
                     <div class='bottom-menu'>";
                 if($rol!='lector'){
-                    echo"<form action='sql/itemABM.php' method='post'>
+                    echo"<form class='agregar-tarea a$id $clase' action='sql/itemABM.php' method='post'>
                             <input type='hidden' name='accion' value='agregar_item'>
                             <input type='hidden' name='id_lista' value='$id'>
                             <input class='input-lista' type='text' name='texto' required>
@@ -199,10 +209,11 @@ class ListaController {
                 }
                 echo"
                         <div class='retract-btn'>
-                            <button class='minimizar-btn $id'>^</button>
+                            <button class='minimizar-btn $id'><img class='min-btn m$id' src='../TaskIt/imagenes/$imagen'></button>
                         </div>
                     </div>
                 </article>";
+                if ($rol == 'administrador'){$this->insertarVentanaCompartir($lista,$propietarioId);}
             }
         }
         echo "
@@ -210,16 +221,16 @@ class ListaController {
         </main>";
     }
 
-    public function insertarIconoMiembros($id){
+    public function insertarIconoMiembros($id, $propietarioId){
         $id_usuario = $_SESSION['id'];
         // Buscar administradores
-        $admins = mysqli_query($this->conexion, "SELECT usuario FROM usuarios WHERE usuarios.id IN (SELECT id_usuario from listas_compartidas WHERE listas_compartidas.id_lista = '$id' and rol = 'administrador') ORDER BY usuario;");
+        $admins = mysqli_query($this->conexion, "SELECT * FROM usuarios WHERE usuarios.id IN (SELECT id_usuario from listas_compartidas WHERE listas_compartidas.id_lista = '$id' and rol = 'administrador') ORDER BY usuario;");
         $cantAdmins = mysqli_num_rows($admins);
         // Buscar colaboradores
-        $colaboradores = mysqli_query($this->conexion, "SELECT usuario FROM usuarios WHERE usuarios.id IN (SELECT id_usuario from listas_compartidas WHERE listas_compartidas.id_lista = '$id' and rol = 'colaborador') ORDER BY usuario;");
+        $colaboradores = mysqli_query($this->conexion, "SELECT * FROM usuarios WHERE usuarios.id IN (SELECT id_usuario from listas_compartidas WHERE listas_compartidas.id_lista = '$id' and rol = 'colaborador') ORDER BY usuario;");
         $cantColaboradores = mysqli_num_rows($colaboradores);
         // Buscar lectores
-        $lectores = mysqli_query($this->conexion, "SELECT usuario FROM usuarios WHERE usuarios.id IN (SELECT id_usuario from listas_compartidas WHERE listas_compartidas.id_lista = '$id' and rol = 'lector') ORDER BY usuario;");
+        $lectores = mysqli_query($this->conexion, "SELECT * FROM usuarios WHERE usuarios.id IN (SELECT id_usuario from listas_compartidas WHERE listas_compartidas.id_lista = '$id' and rol = 'lector') ORDER BY usuario;");
         $cantLectores = mysqli_num_rows($lectores);
         // Ventana de miembros
         echo"
@@ -228,21 +239,29 @@ class ListaController {
             <li class='owners'><b>Administradores ($cantAdmins):</b></li>";
             $flag = false;
             while($admin = mysqli_fetch_array($admins)){
-                $admin = $admin[0];
-                echo "<li class='miembro'>$admin</li>";
-                if($admin == $_SESSION['usuario']){
+                $admin_usuario = $admin['usuario'];
+                if($admin['id'] == $propietarioId){
+                    $detalle = ' (propietario)';
+                } else {
+                    $detalle = '';
+                }
+                $admin_nombre_apellido = $admin['nombre'].' '.$admin['apellido'].$detalle;
+                echo "<li class='miembro'>$admin_nombre_apellido</li>";
+                if($admin_usuario == $_SESSION['usuario']){
                     $flag = true;
                 }
             }
             echo"<li class='colaboradores'><b>Colaboradores ($cantColaboradores):</b></li>";
             while($colaborador = mysqli_fetch_array($colaboradores)){
-                $colaborador = $colaborador[0];
-                echo "<li class='colaborador'>$colaborador</li>";
+                $colaborador_usuario = $colaborador['usuario'];
+                $colaborador_nombre_apellido = $colaborador['nombre'].' '.$colaborador['apellido'];
+                echo "<li class='colaborador'>$colaborador_nombre_apellido</li>";
             }
             echo"<li class='lectores'><b>Lectores ($cantLectores):</b></li>";
             while($lector = mysqli_fetch_array($lectores)){
-                $lector = $lector[0];
-                echo "<li class='lector'>$lector</li>";
+                $lector_usuario = $lector['usuario'];
+                $lector_nombre_apellido = $lector['nombre'].' '.$lector['apellido'];
+                echo "<li class='lector'>$lector_nombre_apellido</li>";
             }
         // Agregar miembros solo dueños
         if ($flag){
@@ -308,10 +327,10 @@ class ListaController {
         $id = $lista['id'];
         $etiquetaActual = $lista['etiqueta'];
         echo"
-        <div class='ventana-etiqueta l$id'>
+        <div class='ventana-etiqueta l$id static'>
             <form class='modificar-etiqueta' action='sql/listaABM.php' method='post'>
-                <label for='etiqueta'>Etiqueta</label>
-                <select name='etiqueta'>
+                <label class='static' for='etiqueta'>Etiqueta</label>
+                <select class='static' name='etiqueta'>
                     <option value=''>--sin etiqueta--</option>
         ";
         $controladoretiqueta = new EtiquetaController($this->conexion);
@@ -338,7 +357,7 @@ class ListaController {
         </div>";
     }
 
-    public function insertarVentanaCompartir($lista){
+    public function insertarVentanaCompartir($lista, $propietarioId){
         $id = $lista['id'];
         $titulo = $lista['titulo'];
 
@@ -369,9 +388,15 @@ class ListaController {
             <li class='owners'><b>Administradores ($cantAdmins):</b></li>";
             while($admin = mysqli_fetch_array($admins)){
                 $admin_usuario = $admin['usuario'];
+                if($admin['id'] == $propietarioId){
+                    $detalle = ' (propietario)';
+                } else {
+                    $detalle = '';
+                }
+                $admin_nombre_apellido = $admin['nombre'].' '.$admin['apellido'].$detalle;
                 $id_miembro = $admin['id'];
-                echo "<li class='miembro'>$admin_usuario";
-                if($id_miembro != $id_usuario){
+                echo "<li class='miembro'>$admin_nombre_apellido";
+                if($id_miembro != $id_usuario && $admin['id'] != $propietarioId){
                     echo"
                         <button class='editar-miembro $id_miembro'>-</button>
                         <div class='opciones-miembro o$id_miembro'>
@@ -404,18 +429,23 @@ class ListaController {
             echo"<li class='colaboradores'><b>Colaboradores ($cantColaboradores):</b></li>";
             while($colaborador = mysqli_fetch_array($colaboradores)){
                 $colaborador_usuario = $colaborador['usuario'];
+                $colaborador_nombre_apellido = $colaborador['nombre'].' '.$colaborador['apellido'];
                 $id_miembro = $colaborador['id'];
-                echo "<li class='miembro'>$colaborador_usuario
+                echo "<li class='miembro'>$colaborador_nombre_apellido
                         <button class='editar-miembro $id_miembro'>-</button>
                         <div class='opciones-miembro o$id_miembro'>
-                            <p>Cambiar a</p>
+                            <p>Cambiar a</p>";
+                if($colaborador['categoria'] == 'suscriptor'){
+                    echo"
                             <form action='sql/listaABM.php' method='post'>
                                 <input type='hidden' name='id_miembro' value='$id_miembro'>
                                 <input type='hidden' name='id_lista' value='$id'>
                                 <input type='hidden' name='rol' value='administrador'>
                                 <input type='hidden' name='accion' value='modificar_acceso'>
                                 <button type='submit'>Administrador</button>
-                            </form>
+                            </form>";
+                }
+                echo"
                             <form action='sql/listaABM.php' method='post'>
                                 <input type='hidden' name='id_miembro' value='$id_miembro'>
                                 <input type='hidden' name='id_lista' value='$id'>
@@ -435,18 +465,23 @@ class ListaController {
             echo"<li class='lectores'><b>Lectores ($cantLectores):</b></li>";
             while($lector = mysqli_fetch_array($lectores)){
                 $lector_usuario = $lector['usuario'];
+                $lector_nombre_apellido = $lector['nombre'].' '.$lector['apellido'];
                 $id_miembro = $lector['id'];
-                echo "<li class='miembro'>$lector_usuario
+                echo "<li class='miembro'>$lector_nombre_apellido
                         <button class='editar-miembro $id_miembro'>-</button>
                         <div class='opciones-miembro o$id_miembro'>
-                            <p>Cambiar a</p>
+                            <p>Cambiar a</p>";
+                if($lector['categoria'] == 'suscriptor'){
+                    echo"
                             <form action='sql/listaABM.php' method='post'>
                                 <input type='hidden' name='id_miembro' value='$id_miembro'>
                                 <input type='hidden' name='id_lista' value='$id'>
                                 <input type='hidden' name='rol' value='administrador'>
                                 <input type='hidden' name='accion' value='modificar_acceso'>
                                 <button type='submit'>Administrador</button>
-                            </form>
+                            </form>";
+                }
+                echo"
                             <form action='sql/listaABM.php' method='post'>
                                 <input type='hidden' name='id_miembro' value='$id_miembro'>
                                 <input type='hidden' name='id_lista' value='$id'>
@@ -479,6 +514,9 @@ class ListaController {
                 case 'relacion existente':
                     echo"El usuario ya posee acceso a esta lista";
                     break;
+                case 'no suscriptor':
+                    echo"Sólo usuarios pagos pueden ser asignados como administradores";
+                    break;
             }
         }
         echo"
@@ -490,7 +528,7 @@ class ListaController {
                         <label for='rol'>Rol</label>
                         <select name='rol'>
                             <option value='colaborador' selected>Colaborador</option>
-                            <option value='administrador'>Administrador (sólo usuarios premium)</option>
+                            <option value='administrador'>Administrador (sólo suscriptores)</option>
                             <option value='lector'>Lector</option>
                         </select>
                         <button class='confirmar_compartir' type='submit'>Compartir</button>
@@ -502,11 +540,11 @@ class ListaController {
         ";
     }
 
-    public function insertarOpcionEliminarOAbandonar($lista, $rol){
+    public function insertarOpcionEliminarOAbandonar($lista, $rol, $propietarioId){
         $id = $lista['id'];
         $titulo = $lista['titulo'];
         
-        if($rol == 'administrador'){
+        if($propietarioId == $_SESSION['id']){
             $boton = 'Eliminar';
             $accion = 'eliminar_lista';
         } else {

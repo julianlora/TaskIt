@@ -22,13 +22,15 @@ if($resultado!=0){
 	$respuesta=mysqli_fetch_array($consulta);
 	header("Location: ../index.php");
 	
-	// $_SESSION['nombre']=$respuesta['nombre'];
-	// $_SESSION['apellido']=$respuesta['apellido'];
 	$_SESSION['usuario']=$respuesta['usuario'];
 	$_SESSION['id']=$respuesta['id'];
 	$_SESSION['ventana']='listas';
 	$_SESSION['etiqueta']='';
 	$_SESSION['accion'] = 'none';
+	$_SESSION['nombre'] = $respuesta['nombre'];
+	$_SESSION['apellido'] = $respuesta['apellido'];
+	$_SESSION['email'] = $respuesta['email'];
+	$_SESSION['categoria'] = $respuesta['categoria'];
 		
 	// 	echo "Hola ".$_SESSION['nombre']." ".$_SESSION['apellido']."<br />";
 	// 	echo "Acceso al panel de usuarios.<br/>";

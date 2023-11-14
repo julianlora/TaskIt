@@ -114,60 +114,68 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $resultado = mysqli_fetch_array($resultado);
                 $nombre_usuario_compartido = $resultado['usuario'];
                 $id_usuario_compartido = $resultado['id'];
-                // Verificar si ya existe la relacion
-                $sql = "SELECT * FROM listas_compartidas WHERE id_usuario = '$id_usuario_compartido' and id_lista = '$id_lista'";
-                $resultado = mysqli_query($conexion, $sql);
-                if (mysqli_num_rows($resultado) == 0){
-                    // Si no existe, crear relacion del dueño
-                    $resultado = mysqli_num_rows(mysqli_query($conexion, "SELECT * from listas_compartidas WHERE id_usuario = '$id_admin' and id_lista = '$id_lista'"));
-                    if ($resultado == 0){
-                        $sql = "INSERT INTO listas_compartidas (id_usuario, rol, id_lista) VALUES ('$id_admin', 'administrador', '$id_lista')";
+
+                // Verificar en caso de asignarse administrador que el usuario compartido sea suscriptor
+                if($rol == 'administrador' && $resultado['categoria'] != 'suscriptor'){
+                    $_SESSION['resultado'] = 'no suscriptor';
+                    mysqli_close($conexion);
+                    header("Location: ../index.php");
+                } else {
+                    // Verificar si ya existe la relacion
+                    $sql = "SELECT * FROM listas_compartidas WHERE id_usuario = '$id_usuario_compartido' and id_lista = '$id_lista'";
+                    $resultado = mysqli_query($conexion, $sql);
+                    if (mysqli_num_rows($resultado) == 0){
+                        // Si no existe, crear relacion del dueño primero
+                        $resultado = mysqli_num_rows(mysqli_query($conexion, "SELECT * from listas_compartidas WHERE id_usuario = '$id_admin' and id_lista = '$id_lista'"));
+                        if ($resultado == 0){
+                            $sql = "INSERT INTO listas_compartidas (id_usuario, rol, id_lista) VALUES ('$id_admin', 'administrador', '$id_lista')";
+                            if (mysqli_query($conexion, $sql)) {
+                                echo "Lista compartida con éxito.";
+                            } else {
+                                echo "Error al compartir lista: " . mysqli_error($conexion);
+                            }
+                        }
+                        // Crear relacion del usuario compartido
+                        $sql = "INSERT INTO listas_compartidas (id_usuario, rol, id_lista) VALUES ('$id_usuario_compartido', '$rol', '$id_lista')";
                         if (mysqli_query($conexion, $sql)) {
                             echo "Lista compartida con éxito.";
                         } else {
                             echo "Error al compartir lista: " . mysqli_error($conexion);
                         }
-                    }
-                    // Crear relacion
-                    $sql = "INSERT INTO listas_compartidas (id_usuario, rol, id_lista) VALUES ('$id_usuario_compartido', '$rol', '$id_lista')";
-                    if (mysqli_query($conexion, $sql)) {
-                        echo "Lista compartida con éxito.";
-                    } else {
-                        echo "Error al compartir lista: " . mysqli_error($conexion);
-                    }
-                    $_SESSION['resultado'] = 'compartida';
-                    // Modificar tipo de acceso
-                    $sql = "UPDATE listas SET acceso = 'compartido' WHERE id='$id_lista';";
-                    if (mysqli_query($conexion, $sql)) {
-                        echo "Tipo de acceso actualizado con éxito.";
-                    } else {
-                        echo "Error al actualizar tipo de acceso: " . mysqli_error($conexion);
-                    }
-                    // Notificar usuario agregado
-                    $resultado = mysqli_fetch_array(mysqli_query($conexion, "SELECT titulo from listas WHERE id = '$id_lista'"));
-                    $titulo = $resultado['titulo'];
-                    $notificaciones = array(
-                        array('destinatario' => $id_usuario_compartido, 'mensaje'=> "$usuario te ha unido a la lista $titulo como $rol."
-                    ));
-                    // Notificar miembros de la lista excepto admin que comparte y usuario compartido
-                    $sql = "SELECT id FROM usuarios WHERE id IN (
-                        SELECT id_usuario FROM listas_compartidas
-                        WHERE id_lista = '$id_lista' and id_usuario != '$id_usuario_compartido' and id_usuario != '$id_admin'
-                    )";
-                    $resultado = mysqli_query($conexion, $sql);
-                    while($miembro = mysqli_fetch_array($resultado)){
-                        array_push($notificaciones, array(
-                            'destinatario'=> $miembro['id'],
-                            'mensaje'=> "$nombre_usuario_compartido se ha unido a la lista $titulo como $rol."
+                        $_SESSION['resultado'] = 'compartida';
+                        // Modificar tipo de acceso
+                        $sql = "UPDATE listas SET acceso = 'compartido' WHERE id='$id_lista';";
+                        if (mysqli_query($conexion, $sql)) {
+                            echo "Tipo de acceso actualizado con éxito.";
+                        } else {
+                            echo "Error al actualizar tipo de acceso: " . mysqli_error($conexion);
+                        }
+                        // Notificar usuario agregado
+                        $resultado = mysqli_fetch_array(mysqli_query($conexion, "SELECT titulo from listas WHERE id = '$id_lista'"));
+                        $titulo = $resultado['titulo'];
+                        $notificaciones = array(
+                            array('destinatario' => $id_usuario_compartido, 'mensaje'=> "$usuario te ha unido a la lista $titulo como $rol."
                         ));
-                    }
+                        // Notificar miembros de la lista excepto admin que comparte y usuario compartido
+                        $sql = "SELECT id FROM usuarios WHERE id IN (
+                            SELECT id_usuario FROM listas_compartidas
+                            WHERE id_lista = '$id_lista' and id_usuario != '$id_usuario_compartido' and id_usuario != '$id_admin'
+                        )";
+                        $resultado = mysqli_query($conexion, $sql);
+                        while($miembro = mysqli_fetch_array($resultado)){
+                            array_push($notificaciones, array(
+                                'destinatario'=> $miembro['id'],
+                                'mensaje'=> "$nombre_usuario_compartido se ha unido a la lista $titulo como $rol."
+                            ));
+                        }
 
-                    // Enviar notificaciones
-                    $controladornotificacion->enviarNotificaciones($notificaciones);
-                } else {
-                    $_SESSION['resultado'] = 'relacion existente';
-                    mysqli_close($conexion);
-                    header("Location: ../index.php");
+                        // Enviar notificaciones
+                        $controladornotificacion->enviarNotificaciones($notificaciones);
+                    } else {
+                        $_SESSION['resultado'] = 'relacion existente';
+                        mysqli_close($conexion);
+                        header("Location: ../index.php");
+                    }
                 }
             } else {
                 $_SESSION['resultado'] = 'usuario no encontrado';

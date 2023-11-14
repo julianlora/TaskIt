@@ -8,7 +8,7 @@
 <body>
 	<h2>Registrate en el sitio</h2>
     <form action="registro.php" method="post" >
-    	<!-- <label>Nombre
+    	<label>Nombre
         	<input type="text" name="nombre" required />
         </label><br />
 		<label>Apellido
@@ -16,7 +16,7 @@
         </label><br />
         <label>Email
         	<input type="email" name="email" required />
-        </label><br /> -->
+        </label><br />
         <label>Nombre de usuario
         	<input name="usuario" type="text" maxlength="12" />
         </label><br />

@@ -8,9 +8,9 @@
 <body>
 
 <?php
-	// $nombre = $_POST['nombre'];
-	// $apellido = $_POST['apellido'];
-	// $email = $_POST['email'];
+	$nombre = $_POST['nombre'];
+	$apellido = $_POST['apellido'];
+	$email = $_POST['email'];
 	$usuario = $_POST['usuario'];
 	$password = md5($_POST['password']);
 
@@ -28,9 +28,7 @@
 
 	include("../connect.php");
 
-	// $_SESSION['nombre'] = $nombre;
-
-	$consulta = mysqli_query($conexion, "INSERT INTO usuarios (usuario, password) VALUES('$usuario', '$password')");
+	$consulta = mysqli_query($conexion, "INSERT INTO usuarios (usuario, password, nombre, apellido, email) VALUES('$usuario', '$password', '$nombre', '$apellido', '$email')");
 
 
 	header("Location:form_login.php");

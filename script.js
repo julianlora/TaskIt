@@ -1,15 +1,31 @@
+var lastElementOpened = '';
 window.addEventListener('click', function(event) {
+    console.log(event.target)
+    // Cerrar ventanas abiertas cuando el elemento seleccionado no es el mismo que se abrió por última vez, ni el primero en abrirse, ni parte del proceso que se abrió
+    if (lastElementOpened != event.target && lastElementOpened != '' && !event.target.classList.contains('show') && !event.target.classList.contains('static')){
+        document.querySelectorAll('.show').forEach(openedElement => {
+            openedElement.classList.toggle('show')
+        })
+        document.querySelectorAll('.hide').forEach(hiddenElement => {
+            hiddenElement.classList.toggle('hide')
+        })
+    }
+    lastElementOpened = event.target
+
     // Verificar si el elemento clickeado tiene clases
     if (event.target.classList) {
         // Obtener un array de las clases del elemento
         var clases = event.target.classList;
-        
+
         // Puedes iterar a través de las clases si el elemento tiene más de una
         for (var i = 0; i < clases.length; i++) {
             var clase = clases[i];
             let id_lista
             let id_item
             switch (clase){
+                case 'nueva-lista':
+                    document.querySelector('.crear-lista').classList.toggle('show');
+                    break
                 case 'opcionesbtn':
                     document.getElementById(`opciones-${clases[1]}`).classList.toggle("show");
                     break
@@ -59,15 +75,19 @@ window.addEventListener('click', function(event) {
                     document.querySelector(`.panel`).classList.toggle("show");
                     break
                 case 'item-texto':
-                case 'cancelar-editar':
                     id_item = clases[1]
-                    document.querySelector(`.item-texto.${id_item}`).classList.toggle("show");
+                    document.querySelector(`.item-texto.${id_item}`).classList.toggle("hide");
                     document.querySelector(`.edicion-texto.${id_item}`).classList.toggle("show");
                     break
+                // case 'cancelar-editar':
+                //     id_item = clases[1]
+                //     document.querySelector(`.item-texto.${id_item}`).classList.toggle("hide");
+                //     document.querySelector(`.edicion-texto.${id_item}`).classList.toggle("show");
+                //     break
                 case 'modificar-etiqueta-btn':
                     id_item = clases[1]
                     document.querySelector(`.ventana-etiqueta.l${id_item}`).classList.toggle("show");
-                    document.getElementById(`opciones-${id_item}`).classList.toggle("show");
+                    document.getElementById(`opciones-${id_item}`).classList.remove("show");
                     break
                 case 'cancelar-modificar-etiqueta':
                     id_item = clases[1]
@@ -80,7 +100,15 @@ window.addEventListener('click', function(event) {
             }
         }
     }
+
+
+
 });
+
+// // Abrir formulario crear lista
+// document.querySelector('.nueva-lista').addEventListener('click', () => {
+//     document.querySelector('.crear-lista').classList.toggle('show');
+// })
 
 // Retraer lista
 document.querySelectorAll('.minimizar-btn').forEach(retractBtn => {
@@ -90,11 +118,25 @@ document.querySelectorAll('.minimizar-btn').forEach(retractBtn => {
         const mainList = document.querySelector(`.mainlist.m${id_lista}`)
         let minimizada = true
         if (mainList.classList[2] == 'minimizada'){
+            mainList.classList.add('maximizando')
             mainList.classList.remove('minimizada')
+            document.querySelector(`.agregar-tarea.a${id_lista}`).classList.remove('minimizada')
+            document.querySelector(`.min-btn.m${id_lista}`).src = 'imagenes/minimizar.png'
             minimizada = 0
+
+            mainList.addEventListener('animationend', function() {
+                mainList.classList.remove('maximizando')
+            }, { once: true }); 
         } else {
-            mainList.classList.add('minimizada')
+            mainList.classList.add('minimizando')
             minimizada = 1
+
+            mainList.addEventListener('animationend', function() {
+                mainList.classList.add('minimizada')
+                mainList.classList.remove('minimizando')
+                document.querySelector(`.agregar-tarea.a${id_lista}`).classList.add('minimizada')
+                document.querySelector(`.min-btn.m${id_lista}`).src = 'imagenes/maximizar.png'
+            }, { once: true }); 
         }
         // Modificar base de datos
         var xhr = new XMLHttpRequest();
@@ -162,3 +204,8 @@ listas.forEach(lista => {
         }
     })
 })
+
+
+function seleccionarPlanMensual(){
+    console.log('test')
+}

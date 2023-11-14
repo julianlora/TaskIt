@@ -48,13 +48,14 @@ class EtiquetaController {
 
     public function mostrarEtiquetasEnPantalla(){
         // Insertar etiquetas del usuario
+        echo"<p><b>Filtrar por:</b></p>";
         foreach($this->etiquetas as $etiqueta){
             $texto = $etiqueta['texto'];
             echo "
             <form action='sql/etiquetaABM.php' method='post'>
             <input type='hidden' name='accion' value='filtrar_etiqueta'>
             <input type='hidden' name='etiqueta' value='$texto'>
-            <button class='etiqueta' type='submit'>$texto</button>
+            <button class='etiqueta' type='submit'>- $texto</button>
             </form>
             ";
         }
