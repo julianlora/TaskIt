@@ -27,22 +27,22 @@ class EtiquetaController {
 
     public function insertarBotonCrearEtiqueta(){
         echo"
-        <form method='post'>
+        <form class='nueva-etiqueta' method='post'>
         <input type='hidden' name='accion' value='crear_etiqueta'>
-        <button type='submit'>Crear etiqueta</button>
+        <button type='submit'><img src='../TaskIt/imagenes/add.png'></button>
         </form>
         ";
     }
 
     public function insertarFormularioCrearEtiqueta(){
         echo"
-        <form action='sql/etiquetaABM.php' method='post'>
+        <form class='crear-etiqueta' action='sql/etiquetaABM.php' method='post'>
         <label for='etiqueta'>Etiqueta</label>
         <input type='text' name='etiqueta' required>
         <input type='hidden' name='accion' value='crear_etiqueta'>
         <label for='colorInput'>Color</label>
         <input type='color' id='colorInput' name='colorInput' value='#202124'>
-        <button type='submit'>Enviar</button>
+        <button type='submit'>Crear</button>
         </form>";
     }
 

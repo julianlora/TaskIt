@@ -1,0 +1,82 @@
+.contacto{
+	min-height: auto;
+	padding-bottom: 7rem;
+}
+
+.contacto form{
+	min-width: 70rem;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.contacto form .input-box{
+	position: relative;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+
+}
+
+.contacto form .input-box .input-field{
+	position: relative;
+	width: 49%;
+	margin: .8rem 0;
+}
+
+.contacto form .input-box .input-field input,
+.contacto form .textarea-field textarea{
+	width: 100%;
+	height: 100%;
+	padding: 1.5rem;
+	font-size: 1.6rem;
+	color:var(--textarea-color);
+	background: transparent;
+	border-radius: .6rem;
+	border: .2rem solid var(--main-color);
+}
+
+.contacto form .input-box .input-field input::placeholder,
+.contacto form .textarea-field textarea::placeholder{
+	color: var(--textarea-color);
+}
+
+.contacto form .focus{
+	position: absolute;
+	top:0;
+	left: 0;
+	width: 0;
+	height: 100%;
+	background: var(--second-bg-color);
+	border-radius: .6rem; 
+	z-index: -1;
+	transition: .5s;
+}
+
+.contacto form .input-box .input-field input:focus~.focus,
+.contacto form .input-box .input-field input:valid~.focus,
+.contacto form .textarea-field textarea:focus~.focus,
+.contacto form .textarea-field textarea:valid~.focus{
+	width: 100%;
+}
+
+.contacto form .textarea-field{
+
+	position: relative;
+	margin: .8rem 0 2.27rem;
+	display: flex;
+}
+
+.contacto form .textarea-field textarea{
+	resize: none;
+}
+
+.contacto form .btn-box.btns .btn{
+	cursor: pointer;
+}
+
+
+
+
+
+
+

@@ -24,7 +24,7 @@
     <header class="barra">
         <nav>
             <!-- Contenido de la barra de navegación, como logotipo, menús, etc. -->
-            <a href="to_listas.php"><img class='logo' src="imagenes/Taskit2.png"></a>
+            <a href="home/index.php"><img class='logo' src="imagenes/Taskit2.png"></a>
 
             <form method="post" class="search-form">
                 <div class="search-bar">
@@ -41,7 +41,7 @@
             <div class='usuario'>";
             if ($_SESSION['categoria'] == 'estandar'){
                 echo"
-                <div class='suscripcion-btn'><a href='to_suscribirse.php'>Suscribirse</a></div>";
+                <div class='suscripcion-btn'><a href='to_suscribirse.php'><b>Suscribirse</b></a></div>";
             }
             echo"
                 <div class='notificaciones-btn'>
@@ -64,7 +64,9 @@
                 </div>
                 <img class='profile-img' src='imagenes/profile-circle.png'>
                 <div class='panel'>
-                    Hola! $usuario
+                    <p>¡Hola $usuario!</p>
+                    <a href='home/index.php'>Home</a>
+                    <a href='home/index.php#contacto'>Contacto</a>
                     <a href='perfil/salir.php'>Cerrar sesión</a>
                 </div>
             </div>"
@@ -84,7 +86,7 @@
         
         <aside class="barralateral">
             <div class='cover'></div>
-            <a href="to_listas.php"><h2>Mis listas</h2></a>
+            <a href="to_listas.php"><img src='imagenes/listas.png'><h2>Mis listas</h2></a>
             <?php
             if (!isset($_POST['accion']) || $_POST['accion'] != 'nueva_lista'){
                 $controladorlista->insertarBotonNuevaLista();
@@ -99,8 +101,8 @@
                     $controladoretiqueta->insertarBotonCrearEtiqueta();
                 }
             ?>
-            <a href='to_listas_compartidas.php'><h2>Compartidas conmigo</h2></a>
-            <a href='to_calendario.php'><h2>Calendario</h2></a>
+            <a href='to_listas_compartidas.php'><img src='imagenes/share2.png'><h2>Compartidas conmigo</h2></a>
+            <a href='to_calendario.php'><img src='imagenes/calendario.png'><h2>Calendario</h2></a>
         </aside>
 
         <!-- Ventana Principal -->
@@ -128,18 +130,18 @@
     <div class='ventana-suscripcion' style='<?php echo $display?>'>
         <h1>Elige un plan</h1>
         <p>Sucríbete a TaskIt para compartir tus listas y crear equipos de trabajo más eficientes.</p>
-        <div class="subscription-panel">
+        <div class="subscription-panel static">
             
             <div class="subscription-card mensual">
                 <h2>Mensual</h2>
                 <p class='precio-mes'><b>$100/mes</b></p>
-                <button class='plan-btn mensual'>Seleccionar</button>
+                <button class='plan-btn mensual static'>Seleccionar</button>
             </div>
             <div class="subscription-card anual">
                 <h2>Anual</h2>
                 <p class='precio-mes'><b>$50/mes</b></p>
                 <p>$600 precio total</p>
-                <button class='plan-btn anual'>Seleccionar</button>
+                <button class='plan-btn anual static'>Seleccionar</button>
             </div>
 
         </div>
@@ -150,11 +152,7 @@
         }
         ?>
     </div>
-
-    <!-- Footer (Opcional) -->
-    <footer>
-        <!-- Contenido del pie de página, como información de contacto, derechos de autor, etc. -->
-    </footer>
+    
 </body>
 <script src="script.js"></script>
 </html>

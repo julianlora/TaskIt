@@ -72,7 +72,7 @@ class ListaController {
         // <button type='submit'>Nueva lista</button>
         // </form>";
         echo"
-        <img class='nueva-lista static' src='../TaskIt/imagenes/add.png'>";
+        <img class='nueva-lista static' src='../TaskIt/imagenes/add2.png'>";
     }
 
     public function insertarFormularioCrearLista(){
@@ -99,7 +99,7 @@ class ListaController {
             <input class='static' type='date' id='fecha' name='fecha' min='$date'>
 
             <input type='hidden' name='accion' value='crear_lista'>
-            <button type='submit'>Crear</button>
+            <button class='static' type='submit'>Crear</button>
         </form>";
     }
 
@@ -149,7 +149,7 @@ class ListaController {
                 echo"
                             <div class='listmenu'>
                                 <div class='dropdown'>
-                                    <img class='opcionesbtn $id btn' src='imagenes/three-dots.png'>
+                                    <img class='opcionesbtn $id' src='imagenes/three-dots.png'>
                                     <div id='opciones-$id' class='dropdown-content'>";
                                     $this->insertarOpcionEsconderTerminadas($lista);
                                     $this->insertarOpcionModificarEtiqueta($lista);
@@ -165,7 +165,14 @@ class ListaController {
                                         <img class='starimg' src='../TaskIt/imagenes/star.png'>
                                         <button id='mostrarVentana-$id' class='paper-btn opcionbtn compartir $id show $clase'>Compartir</button>";
                                     }
-                                    $this->insertarOpcionEliminarOAbandonar($lista, $rol, $propietarioId);
+                                    if($propietarioId == $_SESSION['id']){
+                                        $boton = 'Eliminar';
+                                    } else {
+                                        $boton = 'Abandonar';
+                                    }
+                                    // Botón para eliminar o abandonar
+                                    echo"
+                                    <button id='mostrarVentana-$id' class='paper-btn opcionbtn eliminar $id'>$boton</button>";
                 echo"
                                     </div>
                                 </div>
@@ -201,11 +208,19 @@ class ListaController {
                     <div class='bottom-menu'>";
                 if($rol!='lector'){
                     echo"<form class='agregar-tarea a$id $clase' action='sql/itemABM.php' method='post'>
+                            
+                            <div id='agregar-bar'>
+                                <input class='input-lista' type='text' name='texto' placeholder='Agregar tarea' required>
+                                <button type='submit'>
+                                    <img src='imagenes/done.png'>
+                                </button>
+                            </div>
+
                             <input type='hidden' name='accion' value='agregar_item'>
                             <input type='hidden' name='id_lista' value='$id'>
-                            <input class='input-lista' type='text' name='texto' required>
-                            <button type='submit'>Agregar tarea</button>
-                        </form><br>";
+                        </form><br>
+                        
+                        ";
                 }
                 echo"
                         <div class='retract-btn'>
@@ -214,6 +229,7 @@ class ListaController {
                     </div>
                 </article>";
                 if ($rol == 'administrador'){$this->insertarVentanaCompartir($lista,$propietarioId);}
+                $this->insertarVentanaEliminarOAbandonar($lista, $rol, $propietarioId);
             }
         }
         echo "
@@ -266,7 +282,7 @@ class ListaController {
         // Agregar miembros solo dueños
         if ($flag){
             echo"
-            <button class='editar_miembros $id'>Editar miembros</button>
+            <button id='editar-miembros' class='editar_miembros $id'>Editar miembros</button>
             </ul>";
         } else {
             echo"</ul>";
@@ -286,7 +302,7 @@ class ListaController {
             echo"<div class='rotulo' style='background-color:$color;'><form action='sql/etiquetaABM.php' method='post'>
             <input type='hidden' name='accion' value='filtrar_etiqueta'>
             <input type='hidden' name='etiqueta' value='$etiqueta'>
-            <button class='etiqueta' type='submit'>$etiqueta</button>
+            <button class='etiqueta' type='submit'><b>$etiqueta</b></button>
             </form></div>";
         }
         
@@ -329,7 +345,7 @@ class ListaController {
         echo"
         <div class='ventana-etiqueta l$id static'>
             <form class='modificar-etiqueta' action='sql/listaABM.php' method='post'>
-                <label class='static' for='etiqueta'>Etiqueta</label>
+                <label class='static' for='etiqueta'>Seleccionar</label>
                 <select class='static' name='etiqueta'>
                     <option value=''>--sin etiqueta--</option>
         ";
@@ -353,7 +369,6 @@ class ListaController {
                 <input type='hidden' name='accion' value='modificar_etiqueta'>
                 <button class='paper-btn show' type='submit'>Confirmar</button>
             </form>
-            <button class='cancelar-modificar-etiqueta $id'>Cancelar</button>
         </div>";
     }
 
@@ -398,7 +413,7 @@ class ListaController {
                 echo "<li class='miembro'>$admin_nombre_apellido";
                 if($id_miembro != $id_usuario && $admin['id'] != $propietarioId){
                     echo"
-                        <button class='editar-miembro $id_miembro'>-</button>
+                        <a><img class='editar-miembro $id_miembro' src='../TaskIt/imagenes/triangle.png'></a>
                         <div class='opciones-miembro o$id_miembro'>
                             <p>Cambiar a</p>
                             <form action='sql/listaABM.php' method='post'>
@@ -432,7 +447,7 @@ class ListaController {
                 $colaborador_nombre_apellido = $colaborador['nombre'].' '.$colaborador['apellido'];
                 $id_miembro = $colaborador['id'];
                 echo "<li class='miembro'>$colaborador_nombre_apellido
-                        <button class='editar-miembro $id_miembro'>-</button>
+                        <a><img class='editar-miembro $id_miembro' src='../TaskIt/imagenes/triangle.png'></a>
                         <div class='opciones-miembro o$id_miembro'>
                             <p>Cambiar a</p>";
                 if($colaborador['categoria'] == 'suscriptor'){
@@ -468,7 +483,7 @@ class ListaController {
                 $lector_nombre_apellido = $lector['nombre'].' '.$lector['apellido'];
                 $id_miembro = $lector['id'];
                 echo "<li class='miembro'>$lector_nombre_apellido
-                        <button class='editar-miembro $id_miembro'>-</button>
+                        <a><img class='editar-miembro $id_miembro' src='../TaskIt/imagenes/triangle.png'></a>
                         <div class='opciones-miembro o$id_miembro'>
                             <p>Cambiar a</p>";
                 if($lector['categoria'] == 'suscriptor'){
@@ -522,7 +537,7 @@ class ListaController {
         echo"
                 <div class='confirmacion-botones'>
                     <form action='sql/listaABM.php' method='post'>
-                        <input type='text' name='usuario' placeholder='Agregar persona' required>
+                        <input type='text' name='usuario' placeholder='Ingrese el usuario' required>
                         <input type='hidden' name='accion' value='compartir_lista'>
                         <input type='hidden' name='id_lista' value='$id'>
                         <label for='rol'>Rol</label>
@@ -533,14 +548,15 @@ class ListaController {
                         </select>
                         <button class='confirmar_compartir' type='submit'>Compartir</button>
                     </form>
-                    <button class='terminar_compartir $id'>Listo</button>
                 </div>
+                <a class='terminar_compartir-btn'><img class='terminar_compartir $id' src='../TaskIt/imagenes/salir.png'></a>
             </div>
+            
         </div>
         ";
     }
 
-    public function insertarOpcionEliminarOAbandonar($lista, $rol, $propietarioId){
+    public function insertarVentanaEliminarOAbandonar($lista, $rol, $propietarioId){
         $id = $lista['id'];
         $titulo = $lista['titulo'];
         
@@ -552,20 +568,16 @@ class ListaController {
             $accion = 'abandonar_lista';
         }
 
-        // Botón para eliminar o abandonar
-        echo"
-        <button id='mostrarVentana-$id' class='paper-btn opcionbtn eliminar $id show'>$boton</button>";
-
         // Ventana de confirmacion escondida
         echo"
         <div id='ventana_confirmacion-$id' class='ventana_confirmacion'>
             <div class='confirmacion-contenido'>
-                <h2>¿Desea eliminar la lista $titulo?</h2>
+                <h2>¿Desea eliminar la lista '$titulo'?</h2>
                 <div class='confirmacion-botones'>
                     <form action='sql/listaABM.php' method='post'>
                         <input type='hidden' name='accion' value='$accion'>
                         <input type='hidden' name='id_lista' value='$id'>
-                        <button class='confirmar_eliminar' type='submit'>$boton</button>
+                        <button class='confirmar_eliminar confirmar' type='submit'>$boton</button>
                     </form>
                     <button class='cancelar_eliminar $id'>Cancelar</button>
                 </div>

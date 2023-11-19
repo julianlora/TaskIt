@@ -1,0 +1,89 @@
+
+.header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 2rem 9%;
+    justify-content: space-between;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    z-index: 100;
+    transition: .3s;
+}
+
+.header .sticky{
+    background: var(--bg-color);
+	box-shadow: -2px 6px 30px -1px rgba(255,255,255,1);
+	-webkit-box-shadow: -2px 6px 30px -1px rgba(255,255,255,1);
+	-moz-box-shadow: -2px 6px 30px -1px rgba(255,255,255,1);
+}
+
+.logo{
+    font-size: 2.5rem;
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+.logo img{
+    max-width: 80px;
+}
+
+.navbar a{
+    font-size: 1.7rem;
+    color: var(--text-color);
+    font-weight: 500;
+    margin-left: 3.5rem;
+    transition: .3s;
+}
+
+.navbar a:not(#workplace):hover,
+.navbar a.active{
+    color: var(--main-color);
+}
+
+
+#menu-icon{
+    font-size: 3.6rem;
+    color: var(--text-color);
+    cursor: pointer;
+    display: none;
+}
+
+
+.ltt-desactive{
+	color :var(--main-color);
+}
+
+.to-mis-listas{
+	position:relative;
+	z-index: 1;
+}
+
+.to-mis-listas a{
+	position: relative;
+	z-index: 1;
+}
+
+.goto{
+	max-height: 2em;
+	position: absolute;
+	top:-7px;
+	right: -40px;
+}
+
+.cover{
+	position:absolute;
+	height: 45px;
+	width: 135px;
+	background-color: #00abf0;
+	left: 24px;
+	top: -19px;
+	z-index: 0;
+	border-radius: 5px;
+}
+
+#workplace{
+    color:black;
+}

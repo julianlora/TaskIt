@@ -33,8 +33,8 @@ body {
     height: 100vh;
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Noto Sans', 'Ubuntu', 'Droid Sans', 'Helvetica Neue', sans-serif;
-    background-color: black;
-    color:#e8eaed;
+    background-color: #112e42;
+    color:#dbdbdb;
 }
 
 button, input[type="button"], input[type="submit"]{
@@ -51,7 +51,7 @@ a {
 }
 
 a:link, :visited{
-    color: #fff;
+    color: #dbdbdb;
 }
 
 header{
@@ -66,7 +66,8 @@ nav{
 }
 
 .logo{
-    max-height: 3em;
+    max-height: 2.5em;
+    margin-left: 1vw;
 }
 /* 
 .buscador{
@@ -97,7 +98,7 @@ nav{
   .search-bar {
     display: inline-flex;
     align-items: center;
-    background-color: #fff;
+    background-color: #dbdbdb;
     border-radius: 20px;
     overflow: hidden;
   }
@@ -126,14 +127,16 @@ nav{
 
 .notificaciones-btn{
     
+    display: flex;
     align-self: center;
+    align-items: center;
     margin-right: 1em;
     cursor: pointer;
     position: relative;
 }
 
 .bell{
-    max-height: 1.5em;
+    max-height: 1.7em;
 }
 
 .yellow-circle{
@@ -167,11 +170,12 @@ nav{
 
 .profile-img{
     padding-left: 0.5vw;
+    padding-right: 1vw;
     max-width: 2em;
     align-self: center;
 }
 
-.panel{
+/* .panel{
     display: none;
     width: 200px;
     height: 300px;
@@ -180,6 +184,32 @@ nav{
     right: 5px;
     background-color: gray;
     z-index: 100;
+} */
+
+.panel {
+    position: absolute;
+    top: 60px; /* Ajusta la distancia desde la parte superior según tus necesidades */
+    right: 10px; /* Ajusta la distancia desde la derecha según tus necesidades */
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: none;
+    color: #202124;
+    text-align: center;
+    width: 200px;
+}
+
+.panel a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    display: block;
+    padding: 20px;
+}
+
+.panel a:hover {
+    background-color: #f4f4f4;
 }
 
 /* Estilos para el contenedor de la barra lateral y la ventana principal */
@@ -190,15 +220,16 @@ nav{
 
 /* Estilos para la barra lateral izquierda */
 aside {
-    background-color: #026aa7;
-    color: #fff;
+    background-color: #081b29;
+    color: #dbdbdb;
     width: 10vw;
     padding: 0;
     position: relative;
+    border-right: 1px solid #10446b;
 }
 
 aside h2 {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     padding: 10px;
     margin:0;
     z-index: 98;
@@ -208,9 +239,17 @@ aside h2 {
 aside a{
     position: relative;
     z-index: 100;
+    display: flex;
+    margin-top: 10px;
 }
 
-aside h2:hover{
+aside a img{
+    max-height: 2em;
+    align-self: center;
+    margin-left: 9px;
+}
+
+aside a:hover{
     background-color: #5f6368;
 }
 
@@ -223,7 +262,7 @@ aside button{
 }
 
 .cover{
-    background-color: #026aa7;
+    background-color: #081b29;
     position:absolute;
     height: 50px;
     width: 100%;
@@ -238,7 +277,7 @@ img.nueva-lista{
     position:absolute;
     z-index: 100;
     right:10px;
-    top:13px;
+    top:22px;
     transition: filter 0.3s ease-out;
 }
 
@@ -249,17 +288,44 @@ img.nueva-lista:hover{
 .crear-lista{
     display: none;
     position: relative;
-    max-width: 100px;
+    max-width: 167px;
     max-height: 200px;
     z-index: 1;
     padding: 10px;
+    border: 2px solid hsl(0, 0%, 45%);;
 }
 
 .etiqueta {
     padding: 0;
     border: none;
-    background-color: #026aa7;
-    color: white;
+    background-color: #081b29;
+    color: #dbdbdb;
+}
+
+.nueva-etiqueta button{
+    background-color: #081b29;
+    margin-top: 5px;
+}
+
+.nueva-etiqueta button img{
+    max-width: 20px;
+}
+
+.crear-etiqueta{
+    padding: 7px;
+    border: 2px solid hsl(0, 0%, 45%);;
+    border-radius: 5px;
+}
+
+.crear-etiqueta button, .crear-lista button{
+    background-color: #00abf0;
+    padding: 3px;
+    color:black;
+    border-radius: 3px;
+}
+
+.crear-etiqueta button:hover, .crear-lista button:hover{
+    background-color: #4ecdff;
 }
 
 main{
@@ -284,8 +350,8 @@ main{
 .lista{
     padding:1%;
     width: 100%;
-    /* border: solid hsl(180, 1%, 65%); */
-    border-width:1px 1px 1px 1px;
+    border: solid hsl(0, 0%, 31%);
+    border-width:2px;
     position:relative;
     border-radius: 10px;
     /* display: flex;
@@ -299,7 +365,7 @@ main{
 
 .lista button, .lista input[type="button"], .lista input[type="submit"]{
     background-color: #202124;
-    color: #e8eaed;
+    color: #dbdbdb;
 }
 
 .lista .btn {
@@ -322,7 +388,7 @@ main{
     position: absolute;
     display: flex;
     justify-content: space-between;
-    width: 100%;
+    width: 98%;
     z-index: 2;
 }
 
@@ -377,11 +443,20 @@ main{
     padding-top: 5px;
 }
 
+#editar-miembros{
+    width: 200px;
+    background-color: #0079bf;
+    padding: 5px;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
 .rotulo{
     padding: 5px;
     margin:5px;
     margin-top:0;
     margin-bottom:0;
+    border-radius: 3px;
 }
 
 .rotulo button{
@@ -400,6 +475,7 @@ main{
 }
 
 .cover-lista-2{
+    display: none;
     position: absolute;
     background-color: black;
     top:-18px;
@@ -414,11 +490,13 @@ main{
     margin-top: 35px;
     padding-left: 5%;
     padding-right: 5%;
-    z-index: 2;
+    z-index: 1;
 }
 
 .titulo{
     word-wrap: break-word;
+    border-bottom: 2px solid hsl(0, 0%, 31%);;
+    padding-bottom: 15px;
 }
 
 meter{
@@ -428,12 +506,12 @@ meter{
 
 .opcionesbtn {
     color: white;
-    padding: 5px;
-    padding-right: 7px;
+    padding-right: 8px;
+    padding-left: 8px;
     font-size: 10px;
     border: none;
     cursor: pointer;
-    max-height: 1.3em;
+    max-height: 1.5em;
   }
 
 .dropdown {
@@ -469,11 +547,12 @@ meter{
     margin:0;
     cursor: pointer;
     user-select: none;
-}
-
-.paper-btn:not(:last-of-type){
     border-bottom: 1px solid #5f6368;
 }
+
+/* .paper-btn:not(:last-of-type){
+    
+} */
 
 .paper-btn:hover {background-color: #5f6368;}
 
@@ -498,10 +577,19 @@ meter{
     left: 50%;
     transform: translate(-50%, -50%);
     position: absolute;
-    background-color: gray;
+    background-color: #fff;
     z-index: 100;
+    padding: 15px;
+    border-radius: 5px;
+    color: black;
 }
 
+.modificar-etiqueta button{
+    background-color: #0079bf;
+    padding: 3px;
+    border-radius: 5px;
+    color: #fff;
+}
 
 .starimg{
     position: absolute;
@@ -531,6 +619,7 @@ meter{
     border-radius: 5px;
     text-align: center;
     color: black;
+    position: relative;
 }
 
 /* Para ocultar el fondo cuando se muestra la ventana de confimacion */
@@ -538,18 +627,42 @@ meter{
     display: flex;
 }
 
-.ventana_confirmacion-activo button, .ventana_compartir-activo button{
+.ventana_confirmacion-activo button{
     color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    width: 120px;
+    border: 1px solid black
+}
+
+.confirmar_compartir{
+    color: white;
+    padding: 5px 10px;
+    text-decoration: none;
+    width: 120px;
+    display: inline-flex;
+    text-align: center;
+    background-color: #00abf0;
+    margin-left: 10px;
+    border-radius: 5px;
 }
 
 .miembro{
     display: flex;
     justify-content: space-between;
+    position: relative;
+}
+
+.editar-miembro{
+    max-width: 1.4em;
 }
 
 .opciones-miembro{
     display: none;
     position: absolute;
+    right: 0;
+    z-index: 2;
 }
 
 .confirmacion-botones{
@@ -557,8 +670,24 @@ meter{
     justify-content: center;
 }
 
+.confirmar{
+    margin-right: 15px;
+}
+
 .cancelar_eliminar{
     display:flex;
+}
+
+.terminar_compartir-btn{
+    position: absolute;
+    top:0;
+    right:0;
+    background-color: none;
+}
+
+.terminar_compartir-btn img{
+    cursor: pointer;
+    max-width: 2em;
 }
 
 @keyframes maximize {
@@ -608,10 +737,41 @@ ul{
     margin-top: auto;
 }
 
-.agregar-tarea{
+/* .agregar-tarea{
     display: flex;
     justify-content: center;
-}
+} */
+
+.agregar-tarea {
+    text-align: center; /* Centra el formulario */
+    align-self: center;
+  }
+  
+  #agregar-bar {
+    display: inline-flex;
+    align-items: center;
+    overflow: hidden;
+    border: solid 2px hsl(0, 0%, 45%);
+    border-radius: 5px;
+  }
+  
+  #agregar-bar button {
+    background: none;
+    cursor: pointer;
+    height: 33px;
+  }
+
+  #agregar-bar input{
+    border: none;
+    color:#ddd;
+  }
+  
+  #agregar-bar img {
+    width: 15px;
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+
 
 .minimizada{
     display: none;
@@ -619,12 +779,12 @@ ul{
 
 
 .lista input[type="text"]{
-    background-color: #202124; /* Cambia "#fondo" al color de fondo de tu página */
-    border: none; /* Elimina el borde del input */
-    color: #fff; /* Cambia al color de texto deseado */
+    padding: 8px;
+    background-color: #202124;
     border: solid hsl(180, 1%, 65%);
-    border-width:1px 1px 1px 1px;
-    border-radius: 2%;
+    border-width:1px;
+    border-radius: 2px;
+    color:#ddd;
 }
 
 .retract-btn{
@@ -634,10 +794,15 @@ ul{
 
 .retract-btn img{
     max-height: 1.3em;
+    
 }
 
 .retract-btn:hover{
     box-shadow: 0px 0px 10px 5px rgba(128, 128, 128, 0.5);
+}
+
+.minimizar-btn{
+    background-color: #202124 ;
 }
 
 /* ITEM */
@@ -669,7 +834,11 @@ ul{
     cursor: pointer;
 }
 
-.checkbox img{
+.checked{
+    max-height: 22px;
+}
+
+.unchecked{
     max-height: 20px;
 }
 
@@ -686,6 +855,12 @@ ul{
 
 .crear-subitem{
     display: none;
+}
+
+.crear-subitem img{
+    width: 15px;
+    margin-right: 10px;
+    margin-left: 10px;
 }
 
 /* CALENDARIO */
@@ -711,14 +886,19 @@ ul{
     flex: 0 0 calc(13% - 20px); /* Calcula el ancho para un máximo de 7 tarjetas por fila */
     height: 150px;
     margin: 10px;
-    background-color: #0079bf;
+    background-color: #112e42;
     color: #fff;
-    padding: 10px;
+    padding: 6px;
     border-radius: 5px;
+    border:4px solid #0079bf;
+}
+
+.dia:hover{
+    background-color: #0079bf;
 }
 
 .dia.hoy{
-    background-color: turquoise;
+    border:4px solid white;
 }
 
 .dia.extra{
@@ -727,15 +907,31 @@ ul{
 
 /* Estilos para la barra de navegación superior */
 header {
-    background-color: #0079bf;
+    background-color: #026aa7;
     color: #fff;
     padding: 10px;
+    border-bottom: 3px solid #004e7a;
+}
+
+.suscripcion-btn{
+    position: absolute;
+    align-self: center;
+    right:140px;
+    padding:10px;
+    background-color: rgb(197, 29, 29, 0.9);
+    border: 1px solid rgb(216, 0, 0);
+    border-radius: 10px;
 }
 
 /* SUSCRIPCION */
 
 .ventana-suscripcion{
     text-align: center;
+    height: 95vh;
+}
+
+.ventana-suscripcion h1{
+    margin-top: 10vh;
 }
 
 .subscription-panel {
@@ -778,10 +974,12 @@ header {
 
 .mp-mensual-btn{
     display: none;
+    margin-top: 20px;
 }
 
 .mp-anual-btn{
     display: none;
+    margin-top: 20px;
 }
 
 .disabled{

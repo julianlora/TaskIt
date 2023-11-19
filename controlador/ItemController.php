@@ -73,7 +73,7 @@ class ItemController {
             // No checkeada
             $accion = 'descheckear';
             $clase = 'checked';
-            $img_path = '../TaskIt/imagenes/checked.png';
+            $img_path = '../TaskIt/imagenes/checked2.png';
         }
         // Checkbox
         if ($rol != 'lector'){
@@ -142,8 +142,8 @@ class ItemController {
                 <input type='hidden' name='accion' value='agregar_subitem'>
                 <input type='hidden' name='id_sublista' value='$id_sublista'>
                 <input type='hidden' name='nivel' value='$nivel'>
-                <input class='static' type='text' name='texto' required>
-                <button type='submit'>Agregar subitem</button>
+                <input class='static' type='text' name='texto' placeholder='Subitem' required>
+                <button type='submit'><img src='imagenes/done.png'></button>
             </form>
         ";
     }

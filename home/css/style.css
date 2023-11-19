@@ -1,0 +1,57 @@
+
+/******** Modulos Css ***************/
+
+@import url('../css/modulos/header.css');
+@import url('../css/modulos/home.css');
+@import url('../css/modulos/nosotros.css');
+@import url('../css/modulos/acercaDe.css');
+@import url('../css/modulos/contacto.css');
+@import url('../css/modulos/footer.css');
+@import url('../css/modulos/formulario.css');
+@import url('../css/modulos/breakPoints.css');
+@import url('../css/modulos/login.css');
+@import url('../css/modulos/registro.css');
+
+
+
+/* ********* Reset Css ********* */
+*,
+*:before,
+*:after{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    border: none;
+    outline: none;
+    scroll-behavior: smooth;
+    font-family: Black Ops One, sans-serif;
+}
+
+:root{
+    --bg-color:#081b29;
+    --second-bg-color:#112e42;
+    --text-color:#ededed;
+    --main-color:#00abf0;
+}
+
+html{
+    overflow: hidden;
+    font-size: 62.5%;
+    overflow-y: scroll;
+}
+
+body{
+
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+section{
+    min-height: 100vh;
+    padding: 10rem 9% 2rem;
+}
+
+.hide{
+    display: none;
+}
