@@ -186,7 +186,7 @@ En TaskIt, creemos que la productividad y la colaboración pueden ser emocionant
 			</div>
 
 			<?php
-			if(isset($_GET['resultado']) && $_GET['resultado'] == 'exito'){
+			if(isset($_GET['resultado']) && $_GET['resultado'] == 'correoexitoso'){
 				echo "<p style='font-size:18px;margin-top:15px;'>¡Correo enviado!</p>";
 			}
 			?>
@@ -215,6 +215,11 @@ En TaskIt, creemos que la productividad y la colaboración pueden ser emocionant
 			<div class="btn-box btns">
 				<button type="submit" class="btn">Login</button>
 			</div><br>
+			<?php 
+			if(isset($_GET['resultado']) && $_GET['resultado'] == 'usernotfound'){
+				echo"<p style='font-size:1.5em;margin-top:20px;'>Datos incorrectos</p>";
+			}
+			?>
 			<p style='font-size:1.5em;margin-top:20px;'>¿No tienes cuenta? <a href="index.php?accion=registro">Registrate</a></p>
 		</form>
 		
@@ -252,6 +257,11 @@ En TaskIt, creemos que la productividad y la colaboración pueden ser emocionant
 			<div class="btn-box btns">
 				<button type="submit" class="btn">Regístrarse</button>
 			</div><br>
+			<?php 
+			if(isset($_GET['resultado']) && $_GET['resultado'] == 'notavailable'){
+				echo"<p style='font-size:1.5em;margin-top:20px;'>El nombre de usuario no esta disponible</p>";
+			}
+			?>
 			<p style='font-size:1.5em;margin-top:20px;'>¿Ya tienes cuenta? <a href="index.php?accion=login">Logueate</a></p>
 		</form>
 		

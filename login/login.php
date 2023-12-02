@@ -38,7 +38,7 @@ if($resultado!=0){
 
 }else{
 	echo "No es un usuario registrado";
-	include ("form_registro.php");
+	header("Location: ../home/index.php?accion=login&resultado=usernotfound");
 }
 
 ?>

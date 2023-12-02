@@ -2,7 +2,7 @@ var lastElementOpened = '';
 window.addEventListener('click', function(event) {
     console.log(event.target)
     // Cerrar ventanas abiertas cuando el elemento seleccionado no es el mismo que se abrió por última vez, ni el primero en abrirse, ni parte del proceso que se abrió
-    if (lastElementOpened != event.target && lastElementOpened != '' && !event.target.classList.contains('show') && !event.target.classList.contains('static')){
+    if (lastElementOpened != event.target && lastElementOpened != '' && !event.target.classList.contains('show') && !event.target.classList.contains('static') && document.querySelector('.ventana-suscripcion').style.display == 'none'){
         document.querySelectorAll('.show').forEach(openedElement => {
             openedElement.classList.toggle('show')
         })
@@ -92,6 +92,11 @@ window.addEventListener('click', function(event) {
                 case 'cancelar-modificar-etiqueta':
                     id_item = clases[1]
                     document.querySelector(`.ventana-etiqueta.l${id_item}`).classList.toggle("show");
+                    break
+                case 'modificar-fecha-btn':
+                    id_item = clases[1]
+                    document.querySelector(`.ventana-fecha.l${id_item}`).classList.toggle("show");
+                    document.getElementById(`opciones-${id_item}`).classList.remove("show");
                     break
                 case 'editar-miembro':
                     id_item = clases[1]
@@ -204,8 +209,3 @@ listas.forEach(lista => {
         }
     })
 })
-
-
-function seleccionarPlanMensual(){
-    console.log('test')
-}

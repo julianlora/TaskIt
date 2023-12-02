@@ -69,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Error al enviar el correo: {$mail->ErrorInfo}";
     }
 
-    header("Location: home/index.php?resultado=exito#contacto");
+    header("Location: home/index.php?resultado=correoexitoso#contacto");
 
 }
 ?>

@@ -22,8 +22,8 @@ $preferenceMensual = $client->create([
     ),
     "back_urls"=>array(
         "success"=>"http://localhost/TaskIt/sql/usuarioABM.php?accion=suscripcion&plan=mensual",
-        "failure"=>"http://localhost/TaskIt/success.php",
-        "pending"=>"http://localhost/TaskIt/success.php"
+        "failure"=>"http://localhost/TaskIt/index.php",
+        "pending"=>"http://localhost/TaskIt/index.php"
     )
 ]);
 $preferenceAnual = $client->create([
@@ -37,8 +37,8 @@ $preferenceAnual = $client->create([
     ),
     "back_urls"=>array(
         "success"=>"http://localhost/TaskIt/sql/usuarioABM.php?accion=suscripcion&plan=anual",
-        "failure"=>"http://localhost/TaskIt/success.php",
-        "pending"=>"http://localhost/TaskIt/success.php"
+        "failure"=>"http://localhost/TaskIt/index.php",
+        "pending"=>"http://localhost/TaskIt/index.php"
     )
 ]);
 

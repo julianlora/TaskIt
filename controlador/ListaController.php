@@ -1,5 +1,8 @@
 <?php
 include("ItemController.php");
+require 'vendor/autoload.php';
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 class ListaController {
     private $listas = [];
@@ -61,6 +64,61 @@ class ListaController {
             ORDER BY id DESC");
             while($fila = mysqli_fetch_array($resultado)){
                 $this->listas[] = $fila;
+            }
+        }
+
+        $this->notificarFinalizacion();
+    }
+
+    public function notificarFinalizacion(){
+        $hoy = date('Y-m-d');
+        foreach($this->listas as $lista){
+            // Si finaliza hoy mandar mail
+            if($lista['fecha_finalizacion'] == $hoy && $lista['finalizacion_notificada'] == False){
+
+                // Dirección de correo electrónico a la que se enviará el mensaje
+                $destinatario = "equipo-taskit@outlook.com";
+                
+                // Asunto del correo
+                $titulo = $lista['titulo'];
+                $asunto = "Finalizacion de lista: '$titulo'";
+
+                // Construye el cuerpo del mensaje
+                $cuerpoMensaje = "La lista '$titulo' ha llegado a su fecha de finalizacion.";
+
+                // Crea una nueva instancia de PHPMailer
+                $mail = new PHPMailer(true);
+                
+                // Configuración del servidor SMTP de Outlook
+                $mail->isSMTP();
+                $mail->Host = 'smtp.office365.com';
+                $mail->SMTPAuth = true;
+                $mail->Username = 'equipo-taskit@outlook.com';
+                $mail->Password = 'laboratorio23';
+                $mail->SMTPSecure = 'tls';
+                $mail->Port = 587;
+
+                // Configuración adicional
+                $address = $_SESSION['email'];
+                $mail->setFrom('equipo-taskit@outlook.com', 'TaskIt');
+                $mail->addAddress($address, 'Destinatario');
+
+                // Contenido del correo
+                $mail->isHTML(false);
+                $mail->Subject = $asunto;
+                $mail->Body = $cuerpoMensaje;
+
+                // Envía el correo
+                $mail->send();
+
+                $id = $lista['id'];
+                $sql = "UPDATE listas SET finalizacion_notificada = true WHERE id ='$id';";
+                if (mysqli_query($this->conexion, $sql)) {
+                    echo "Lista actualizada con éxito.";
+                } else {
+                    echo "Error al actualizar lista: " . mysqli_error($conexion);
+                }
+                
             }
         }
     }
@@ -155,7 +213,7 @@ class ListaController {
                                     $this->insertarOpcionModificarEtiqueta($lista);
                                     // Funcionalidades exclusivas de administrador
                                     if($rol == 'administrador'){
-                                        echo"<button class='paper-btn show'>Modificar fecha de finalización</button>";
+                                        $this->insertarOpcionModificarFecha($lista);
                                         if($_SESSION['categoria'] == 'suscriptor'){
                                             $clase = '';
                                         } else {
@@ -181,6 +239,7 @@ class ListaController {
                     </div>";
                 // Ventanas de confirmacion
                 $this->insertarVentanaModificarEtiqueta($lista);
+                $this->insertarVentanaModificarFecha($lista);
                 
                 // TITULO
                 echo"
@@ -372,6 +431,39 @@ class ListaController {
         </div>";
     }
 
+    public function insertarOpcionModificarFecha($lista){
+        $id = $lista['id'];
+        if($lista['fecha_finalizacion'] == ''){
+            $boton = 'Asignar fecha de finalizacion';
+        } else {
+            $boton = 'Modificar fecha de finalizacion';
+        }
+        
+        echo"
+        <button class='modificar-fecha-btn $id paper-btn show'>$boton</button>";
+    }
+
+    public function insertarVentanaModificarFecha($lista){
+        $id = $lista['id'];
+        $date = date('Y-m-d');
+        $etiquetaActual = $lista['etiqueta'];
+        echo"
+        <div class='ventana-fecha l$id static'>
+            <form class='modificar-fecha' action='sql/listaABM.php' method='post'>
+
+                <label class='static' for='fecha'>Seleccionar fecha:</label>
+                <input class='static' type='date' name='fecha' min='$date'>
+                <label>
+                    <input class='static' type='checkbox' name='sinfecha'>
+                    Sin fecha
+                </label>
+                <input type='hidden' name='id_lista' value='$id'>
+                <input type='hidden' name='accion' value='modificar_fecha'><br>
+                <button class='paper-btn show' type='submit'>Confirmar</button>
+            </form>
+        </div>";
+    }
+
     public function insertarVentanaCompartir($lista, $propietarioId){
         $id = $lista['id'];
         $titulo = $lista['titulo'];
@@ -531,6 +623,9 @@ class ListaController {
                     break;
                 case 'no suscriptor':
                     echo"Sólo usuarios pagos pueden ser asignados como administradores";
+                    break;
+                case 'lista propia':
+                    echo"No puedes compartirte tu propia lista";
                     break;
             }
         }

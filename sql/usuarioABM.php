@@ -1,6 +1,8 @@
 <?php
 session_start();
 include("../connect.php");
+include("../controlador/NotificacionController.php");
+$controladornotificacion = new NotificacionController($conexion);
     
 $accion = $_GET["accion"];
 $id_usuario = $_SESSION['id'];
@@ -31,9 +33,14 @@ switch($accion){
         $_SESSION['ventana'] = 'listas';
         $_SESSION['categoria'] = 'suscriptor';
         
+        // Enviar notificacion
+        $notificaciones = array(
+            array('destinatario' => $id_usuario, 'mensaje'=> "¡Gracias por suscribirte a TaskIt! Ahora puedes compartir tus listas para crear y administrar equipos de trabajo más eficientes."
+        ));
+        $controladornotificacion->enviarNotificaciones($notificaciones);
+
         // Cerrar la conexión a la base de datos
         mysqli_close($conexion);
-        header("Location: ../index.php");
         break;
 
     default:

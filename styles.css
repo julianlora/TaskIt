@@ -529,7 +529,7 @@ meter{
     /* border-width: 0; */
     box-shadow: 0 1px 2px 0 rgb(0 0 0 / 60%), 0 2px 6px 2px rgb(0 0 0 / 30%);
     border-radius: 4px;
-    z-index: 1;
+    z-index: 2;
     right: 0px;
 }
 
@@ -561,7 +561,7 @@ meter{
     border: none;
 }
 
-.ventana-etiqueta{
+.ventana-etiqueta, .ventana-fecha{
     display: none;
     background-color: rgba(0, 0, 0, 0.6);
     width: 99%;
@@ -570,7 +570,7 @@ meter{
     position:absolute;
 }
 
-.modificar-etiqueta{
+.modificar-etiqueta, .modificar-fecha{
     display: flex;
     flex-direction: column;
     top: 50%;
@@ -584,7 +584,7 @@ meter{
     color: black;
 }
 
-.modificar-etiqueta button{
+.modificar-etiqueta button, .modificar-fecha button{
     background-color: #0079bf;
     padding: 3px;
     border-radius: 5px;

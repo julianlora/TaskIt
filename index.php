@@ -130,18 +130,18 @@
     <div class='ventana-suscripcion' style='<?php echo $display?>'>
         <h1>Elige un plan</h1>
         <p>Sucríbete a TaskIt para compartir tus listas y crear equipos de trabajo más eficientes.</p>
-        <div class="subscription-panel static">
+        <div class="subscription-panel">
             
             <div class="subscription-card mensual">
                 <h2>Mensual</h2>
                 <p class='precio-mes'><b>$100/mes</b></p>
-                <button class='plan-btn mensual static'>Seleccionar</button>
+                <button class='plan-btn mensual'>Seleccionar</button>
             </div>
             <div class="subscription-card anual">
                 <h2>Anual</h2>
                 <p class='precio-mes'><b>$50/mes</b></p>
                 <p>$600 precio total</p>
-                <button class='plan-btn anual static'>Seleccionar</button>
+                <button class='plan-btn anual'>Seleccionar</button>
             </div>
 
         </div>

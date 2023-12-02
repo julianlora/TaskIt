@@ -28,10 +28,15 @@
 
 	include("../connect.php");
 
-	$consulta = mysqli_query($conexion, "INSERT INTO usuarios (usuario, password, nombre, apellido, email) VALUES('$usuario', '$password', '$nombre', '$apellido', '$email')");
+	$consulta = mysqli_query($conexion, "SELECT * FROM usuarios WHERE usuario='$usuario'");
+	if(mysqli_num_rows($consulta) > 0){
+		header("Location:../home/index.php?accion=registro&resultado=notavailable");
+	} else {
+		$consulta = mysqli_query($conexion, "INSERT INTO usuarios (usuario, password, nombre, apellido, email) VALUES('$usuario', '$password', '$nombre', '$apellido', '$email')");
+		header("Location:../home/index.php?accion=login");
+	}
 
-
-	header("Location:../home/index.php?accion=login");
+	
 
 ?>	
     
