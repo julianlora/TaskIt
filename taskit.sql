@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 19-11-2023 a las 20:51:39
+-- Tiempo de generación: 02-12-2023 a las 10:51:25
 -- Versión del servidor: 8.0.34
 -- Versión de PHP: 8.2.4
 
@@ -131,7 +131,9 @@ INSERT INTO `items` (`id`, `texto`, `id_lista`, `nivel`, `tipo`, `checked`, `id_
 (187, 'al crear subitem y eliminarlo se checkea el item padre aunque estaba todo descheckeado', 72, 1, 'subitem', 0, 123),
 (191, 'el lector todavía puede modificar items', 72, 1, 'subitem', 0, 102),
 (192, 'etiqueta', 72, 0, 'sublista', 0, NULL),
-(193, 'no muestra las compartidas no propias con etiqueta', 72, 1, 'subitem', 0, 192);
+(193, 'no muestra las compartidas no propias con etiqueta', 72, 1, 'subitem', 0, 192),
+(194, 'hjghjgb', 132, 0, 'sublista', 0, NULL),
+(195, 'jkhhjknjk', 132, 1, 'subitem', 0, 194);
 
 -- --------------------------------------------------------
 
@@ -147,21 +149,22 @@ CREATE TABLE `listas` (
   `fecha_finalizacion` date DEFAULT NULL,
   `acceso` varchar(10) NOT NULL DEFAULT 'privado',
   `esconder_terminadas` tinyint(1) NOT NULL DEFAULT '0',
-  `minimizada` tinyint(1) NOT NULL DEFAULT '0'
+  `minimizada` tinyint(1) NOT NULL DEFAULT '0',
+  `finalizacion_notificada` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `listas`
 --
 
-INSERT INTO `listas` (`id`, `titulo`, `etiqueta`, `id_usuario`, `fecha_finalizacion`, `acceso`, `esconder_terminadas`, `minimizada`) VALUES
-(69, 'Metodología de Sistemas', 'Universidad', 3, '2023-11-03', 'compartido', 0, 0),
-(71, 'Proyecto 1', 'Trabajo', 3, NULL, 'privado', 0, 0),
-(72, 'Laboratorio 4', 'Universidad', 3, '2023-11-01', 'compartido', 0, 0),
-(73, 'Lista sin etiqueta', NULL, 3, '2023-11-11', 'privado', 0, 0),
-(75, 'Lista de compras', 'Personal', 3, NULL, 'compartido', 0, 0),
-(130, 'Nueva lista', '', 7, '2023-11-23', 'compartido', 0, 0),
-(131, 'Nueva lista', '', 1, '2023-11-23', 'compartido', 0, 0);
+INSERT INTO `listas` (`id`, `titulo`, `etiqueta`, `id_usuario`, `fecha_finalizacion`, `acceso`, `esconder_terminadas`, `minimizada`, `finalizacion_notificada`) VALUES
+(69, 'Metodología de Sistemas', 'Universidad', 3, NULL, 'compartido', 0, 0, 0),
+(71, 'Proyecto 1', 'Trabajo', 3, NULL, 'privado', 0, 0, 0),
+(72, 'Laboratorio 4', 'Universidad', 3, '2023-11-01', 'compartido', 0, 0, 0),
+(73, 'Lista sin etiqueta', NULL, 3, '2023-11-11', 'compartido', 0, 0, 0),
+(75, 'Lista de compras', 'Personal', 3, NULL, 'compartido', 0, 0, 0),
+(130, 'Nueva lista', '', 7, '2023-11-23', 'compartido', 0, 0, 0),
+(132, 'knjjklnjknjk', '', 4, '2023-11-20', 'privado', 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -190,8 +193,8 @@ INSERT INTO `listas_compartidas` (`id`, `id_usuario`, `rol`, `id_lista`, `id_eti
 (128, 7, 'administrador', 130, NULL),
 (130, 3, 'administrador', 75, NULL),
 (131, 7, 'lector', 75, NULL),
-(132, 1, 'administrador', 131, NULL),
-(133, 3, 'lector', 131, NULL);
+(136, 3, 'administrador', 73, NULL),
+(137, 1, 'colaborador', 73, NULL);
 
 -- --------------------------------------------------------
 
@@ -202,7 +205,7 @@ INSERT INTO `listas_compartidas` (`id`, `id_usuario`, `rol`, `id_lista`, `id_eti
 CREATE TABLE `notificaciones` (
   `id` int NOT NULL,
   `id_usuario_destino` int NOT NULL,
-  `mensaje` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `mensaje` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `estado` varchar(10) NOT NULL DEFAULT 'pendiente',
   `fecha` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -242,7 +245,7 @@ INSERT INTO `notificaciones` (`id`, `id_usuario_destino`, `mensaje`, `estado`, `
 (30, 4, 'admin2 te ha compartido la lista aaaaaa.', 'leido', '2023-11-01'),
 (31, 1, 'admin3 se ha unido a la lista aaaaaa.', 'leido', '2023-11-01'),
 (32, 1, 'admin2 te ha unido a la lista gasdfas como colaborador.', 'leido', '2023-11-01'),
-(33, 4, 'admin2 te ha unido a la lista gasdfas como administrador.', 'pendiente', '2023-11-01'),
+(33, 4, 'admin2 te ha unido a la lista gasdfas como administrador.', 'leido', '2023-11-01'),
 (34, 1, 'admin3 se ha unido a la lista gasdfas como administrador.', 'leido', '2023-11-01'),
 (35, 3, 'admin te ha unido a la lista asdasdsa como colaborador.', 'leido', '2023-11-01'),
 (36, 1, 'admin2 te ha unido a la lista afssafas como colaborador.', 'leido', '2023-11-01'),
@@ -254,29 +257,34 @@ INSERT INTO `notificaciones` (`id`, `id_usuario_destino`, `mensaje`, `estado`, `
 (42, 1, 'admin2 te ha unido a la lista ddsds como colaborador.', 'leido', '2023-11-01'),
 (43, 1, 'admin2 te ha unido a la lista sssssss como colaborador.', 'leido', '2023-11-01'),
 (44, 1, 'La lista sssssss ha sido eliminada.', 'leido', '2023-11-01'),
-(45, 4, 'admin2 te ha unido a la lista Laboratorio 4 como lector.', 'pendiente', '2023-11-04'),
+(45, 4, 'admin2 te ha unido a la lista Laboratorio 4 como lector.', 'leido', '2023-11-04'),
 (46, 1, 'admin3 se ha unido a la lista Laboratorio 4 como lector.', 'leido', '2023-11-04'),
-(47, 4, 'admin2 te ha unido a la lista Laboratorio 4 como lector.', 'pendiente', '2023-11-05'),
+(47, 4, 'admin2 te ha unido a la lista Laboratorio 4 como lector.', 'leido', '2023-11-05'),
 (48, 1, 'admin3 se ha unido a la lista Laboratorio 4 como lector.', 'leido', '2023-11-05'),
-(49, 4, 'admin2 te ha unido a la lista Laboratorio 4 como lector.', 'pendiente', '2023-11-05'),
+(49, 4, 'admin2 te ha unido a la lista Laboratorio 4 como lector.', 'leido', '2023-11-05'),
 (50, 1, 'admin3 se ha unido a la lista Laboratorio 4 como lector.', 'leido', '2023-11-05'),
-(51, 4, 'admin2 te ha unido a la lista Laboratorio 4 como lector.', 'pendiente', '2023-11-05'),
+(51, 4, 'admin2 te ha unido a la lista Laboratorio 4 como lector.', 'leido', '2023-11-05'),
 (52, 1, 'admin3 se ha unido a la lista Laboratorio 4 como lector.', 'leido', '2023-11-05'),
-(53, 4, 'admin2 te ha unido a la lista Laboratorio 4 como lector.', 'pendiente', '2023-11-05'),
+(53, 4, 'admin2 te ha unido a la lista Laboratorio 4 como lector.', 'leido', '2023-11-05'),
 (54, 1, 'admin3 se ha unido a la lista Laboratorio 4 como lector.', 'leido', '2023-11-05'),
-(55, 4, 'admin2 te ha unido a la lista Laboratorio 4 como lector.', 'pendiente', '2023-11-05'),
+(55, 4, 'admin2 te ha unido a la lista Laboratorio 4 como lector.', 'leido', '2023-11-05'),
 (56, 1, 'admin3 se ha unido a la lista Laboratorio 4 como lector.', 'leido', '2023-11-05'),
-(57, 4, 'admin2 te ha unido a la lista Laboratorio 4 como lector.', 'pendiente', '2023-11-05'),
+(57, 4, 'admin2 te ha unido a la lista Laboratorio 4 como lector.', 'leido', '2023-11-05'),
 (58, 1, 'admin3 se ha unido a la lista Laboratorio 4 como lector.', 'leido', '2023-11-05'),
-(59, 4, 'admin2 te ha convertido en lector de la lista Laboratorio 4.', 'pendiente', '2023-11-05'),
+(59, 4, 'admin2 te ha convertido en lector de la lista Laboratorio 4.', 'leido', '2023-11-05'),
 (60, 1, 'admin3 se ha convertido en lector de la lista Laboratorio 4.', 'leido', '2023-11-05'),
 (61, 1, 'admin2 te ha unido a la lista Lista de compras como administrador.', 'leido', '2023-11-13'),
 (62, 3, 'admin ha abandonado la lista Metodología de Sistemas.', 'leido', '2023-11-13'),
-(63, 1, 'admin2 te ha unido a la lista Metodología de Sistemas como colaborador.', 'pendiente', '2023-11-13'),
+(63, 1, 'admin2 te ha unido a la lista Metodología de Sistemas como colaborador.', 'leido', '2023-11-13'),
 (64, 3, 'pepe te ha unido a la lista Nueva lista como colaborador.', 'leido', '2023-11-15'),
 (65, 7, 'admin2 te ha unido a la lista Lista de compras como lector.', 'pendiente', '2023-11-17'),
 (66, 3, 'admin te ha unido a la lista Nueva lista como lector.', 'leido', '2023-11-18'),
-(67, 7, 'admin2 ha abandonado la lista Nueva lista.', 'pendiente', '2023-11-18');
+(67, 7, 'admin2 ha abandonado la lista Nueva lista.', 'pendiente', '2023-11-18'),
+(68, 3, 'La lista Nueva lista ha sido eliminada.', 'pendiente', '2023-11-22'),
+(69, 4, '¡Gracias por suscibirte a TaskIt! Ahora puedes compartir tus listas, crear y administrar equipos de trabajo más eficientes.', 'leido', '2023-11-22'),
+(70, 4, '¡Gracias por suscribirte a TaskIt! Ahora puedes compartir tus listas para crear y administrar equipos de trabajo más eficientes.', 'pendiente', '2023-11-24'),
+(71, 3, 'admin2 te ha unido a la lista Lista sin etiqueta como colaborador.', 'pendiente', '2023-11-26'),
+(72, 1, 'admin2 te ha unido a la lista Lista sin etiqueta como colaborador.', 'pendiente', '2023-11-26');
 
 -- --------------------------------------------------------
 
@@ -299,7 +307,8 @@ INSERT INTO `suscripciones` (`id`, `id_usuario`, `fecha`, `plan`) VALUES
 (3, 3, '2023-11-13', 'mensual'),
 (4, 6, '2023-11-15', 'mensual'),
 (5, 7, '2023-11-15', 'mensual'),
-(6, 1, '2023-11-18', 'anual');
+(6, 1, '2023-11-18', 'anual'),
+(9, 4, '2023-11-24', 'mensual');
 
 -- --------------------------------------------------------
 
@@ -322,11 +331,11 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `usuario`, `password`, `nombre`, `apellido`, `categoria`, `email`) VALUES
-(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'Ignacio', 'Dazza', 'suscriptor', 'julian.ariel.lora.96@outlook.com'),
-(3, 'admin2', 'c84258e9c39059a89ab77d846ddab909', 'Julián', 'Lora', 'suscriptor', 'julian.ariel.lora.96@outlook.com'),
-(4, 'admin3', '32cacb2f994f6b42183a1300d9a3e8d6', 'Agustín', 'Saporiti', 'estandar', 'julian.ariel.lora.96@outlook.com'),
-(6, 'aaa', '47bce5c74f589f4867dbd57e9ca9f808', 'aaaa', 'nuevoaaa', 'suscriptor', 'julian.lora.96@gmail.com'),
-(7, 'pepe', '926e27eecdbc7a18858b3798ba99bddd', 'Pepe', 'Garcia', 'suscriptor', 'julian.lora.96@gmail.com');
+(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'Ignacio', 'Dazza', 'suscriptor', 'julian.ariel.lora@outlook.com'),
+(3, 'admin2', 'c84258e9c39059a89ab77d846ddab909', 'Julián', 'Lora', 'suscriptor', 'julian.ariel.lora@outlook.com'),
+(4, 'admin3', '32cacb2f994f6b42183a1300d9a3e8d6', 'Agustín', 'Saporiti', 'suscriptor', 'julian.ariel.lora@outlook.com'),
+(6, 'aaa', '47bce5c74f589f4867dbd57e9ca9f808', 'aaaa', 'nuevoaaa', 'suscriptor', 'julian.ariel.lora@outlook.com'),
+(7, 'pepe', '926e27eecdbc7a18858b3798ba99bddd', 'Pepe', 'Garcia', 'suscriptor', 'julian.ariel.lora@outlook.com');
 
 --
 -- Índices para tablas volcadas
@@ -397,37 +406,37 @@ ALTER TABLE `etiquetas`
 -- AUTO_INCREMENT de la tabla `items`
 --
 ALTER TABLE `items`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=194;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=196;
 
 --
 -- AUTO_INCREMENT de la tabla `listas`
 --
 ALTER TABLE `listas`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=135;
 
 --
 -- AUTO_INCREMENT de la tabla `listas_compartidas`
 --
 ALTER TABLE `listas_compartidas`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=134;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=138;
 
 --
 -- AUTO_INCREMENT de la tabla `notificaciones`
 --
 ALTER TABLE `notificaciones`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
 
 --
 -- AUTO_INCREMENT de la tabla `suscripciones`
 --
 ALTER TABLE `suscripciones`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Restricciones para tablas volcadas
