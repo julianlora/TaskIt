@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $mail->Host = 'smtp.office365.com';
         $mail->SMTPAuth = true;
         $mail->Username = 'equipo-taskit@outlook.com';
-        $mail->Password = 'laboratorio23';
+        $mail->Password = '*********';
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
 
