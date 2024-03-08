@@ -1,3 +1,14 @@
+# Screens
+
+![Captura de pantalla 2024-03-08 151651](https://github.com/julianlora/TaskIt/assets/120677363/c0e83ebd-8b7a-49ad-bd70-8baf351a5a5a)
+
+![Captura de pantalla 2024-03-08 151831](https://github.com/julianlora/TaskIt/assets/120677363/9cccf877-bc7a-40ea-826d-41ee90031fe6)
+
+![Captura de pantalla 2024-03-08 151732](https://github.com/julianlora/TaskIt/assets/120677363/e47db4c1-bcc0-420c-a716-c7c4e90fefb2)
+
+![Captura de pantalla 2024-03-08 151936](https://github.com/julianlora/TaskIt/assets/120677363/42d2e1ec-faa4-4e73-ab18-fea8e590cb7e)
+
+
 # About
 
 TaskIt is a task management platform that allows the user to create, modify and share lists of tasks. It includes features such as:
